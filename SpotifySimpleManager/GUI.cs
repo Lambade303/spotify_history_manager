@@ -13,16 +13,12 @@ namespace SpotifySimpleManager
     public partial class GUI : Form
     {
         private Steuerung dieSteuerung;
-        private List<string> tracks;
         private bool api_init;
 
         public GUI()
         {
             InitializeComponent();
             dieSteuerung = new Steuerung(this);
-
-            tracks = new List<string>();
-            lB_tracks.DataSource = tracks;
         }
 
         private void GUI_Load(object sender, EventArgs e)
@@ -44,22 +40,30 @@ namespace SpotifySimpleManager
 
         public void SetListBoxContent(string[] contents)
         {
-            tracks.Clear();
-            tracks.AddRange(contents);
+            lB_tracks.Items.Clear();
+            lB_tracks.Items.AddRange(contents);
         }
 
-        private void b_get_Click(object sender, EventArgs e)
+        private async void b_get_Click(object sender, EventArgs e)
         {
             if (api_init)
             {
+                await dieSteuerung.RefreshPlaylistDataAsync();
+
                 bool success = dieSteuerung.TracksToGUI();
                 b_compare.Enabled = success;
+
             }
         }
 
         private void b_compare_Click(object sender, EventArgs e)
         {
             dieSteuerung.CompareRequest();
+        }
+
+        private void b_debugdump_Click(object sender, EventArgs e)
+        {
+            dieSteuerung.TracksAsDump();
         }
     }
 }

@@ -33,6 +33,7 @@
             this.lbl_internet = new System.Windows.Forms.Label();
             this.b_compare = new System.Windows.Forms.Button();
             this.lbl_unterschiedlich = new System.Windows.Forms.Label();
+            this.b_debugdump = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lB_tracks
@@ -83,11 +84,22 @@
             this.lbl_unterschiedlich.TabIndex = 4;
             this.lbl_unterschiedlich.Text = "Unterschiedlich";
             // 
+            // b_debugdump
+            // 
+            this.b_debugdump.Location = new System.Drawing.Point(284, 105);
+            this.b_debugdump.Name = "b_debugdump";
+            this.b_debugdump.Size = new System.Drawing.Size(93, 23);
+            this.b_debugdump.TabIndex = 5;
+            this.b_debugdump.Text = "DEBUGDUMP";
+            this.b_debugdump.UseVisualStyleBackColor = true;
+            this.b_debugdump.Click += new System.EventHandler(this.b_debugdump_Click);
+            // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.b_debugdump);
             this.Controls.Add(this.lbl_unterschiedlich);
             this.Controls.Add(this.b_compare);
             this.Controls.Add(this.lbl_internet);
@@ -108,6 +120,7 @@
         private System.Windows.Forms.Label lbl_internet;
         private System.Windows.Forms.Button b_compare;
         private System.Windows.Forms.Label lbl_unterschiedlich;
+        private System.Windows.Forms.Button b_debugdump;
     }
 }
 
