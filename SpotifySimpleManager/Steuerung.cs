@@ -13,6 +13,7 @@ namespace SpotifySimpleManager
     class Steuerung
     {
         GUI dieGUI;
+        Daten dieDaten;
 
         SpotifyWebAPI api;
         FullPlaylist l303;
@@ -23,6 +24,7 @@ namespace SpotifySimpleManager
         public Steuerung(GUI pGUI)
         {
             dieGUI = pGUI;
+            dieDaten = new Daten();
         }
 
         public async void InitializeAPIAsync() //Nach GUI-Load aufgerufen
@@ -48,15 +50,39 @@ namespace SpotifySimpleManager
             l303_tracks = await getTracksAsync();
         }
 
-        public string[] GetTrackTitles()
+        public bool TracksToGUI()
         {
-            string[] returns = new string[l303_tracks.Count];
-            for (int i = 0; i < returns.Length; i++)
+            try
             {
-                returns[i] = l303_tracks[i].Track.Name;
-            }
+                string[] returns = new string[l303_tracks.Count];
+                for (int i = 0; i < returns.Length; i++)
+                {
+                    returns[i] = l303_tracks[i].Track.Name;
+                }
 
-            return returns;
+                dieGUI.SetListBoxContent(returns);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public int[] CompareRequest()
+        {
+            //Spotify URIs schaben
+            // I: Aktuelle Liste laden
+            string[] uri_aktuell = new string[l303_tracks.Count];
+            for (int i = 0; i < uri_aktuell.Length; i++)
+            {
+                uri_aktuell[i] = l303_tracks[i].Track.Uri;
+            }
+            // II: Dateiliste laden
+            List<string> uri_datei = new List<string>(dieDaten.GetURIsFromFile());
+
+            // III:
+
         }
 
         private async Task<List<PlaylistTrack>> getTracksAsync()
