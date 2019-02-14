@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Daten.cs" />
     <Compile Include="GUI.cs">
       <SubType>Form</SubType>
     </Compile>
