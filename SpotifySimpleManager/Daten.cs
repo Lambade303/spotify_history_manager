@@ -20,6 +20,7 @@ namespace SpotifySimpleManager
         public string[] GetURIsFromFile()
         {
             createDirectory();
+
             string latestPathName = getLatestPathName();
             string[] lines;
 
@@ -30,7 +31,7 @@ namespace SpotifySimpleManager
             else return null; //gibt keine Uris
 
             string[] uris = new string[lines.Length - 2]; // Zwei weniger wegen Header
-            for (int i = 2; i < uris.Length; i++)
+            for (int i = 2; i < lines.Length; i++)
             {
                 uris[i - 2] = lines[i];
             }
@@ -40,8 +41,10 @@ namespace SpotifySimpleManager
 
         public void SaveURIsToFile(string[] uris)
         {
+            createDirectory();
+
             string jetztDate = DateTime.Now.ToShortDateString();
-            string jetztZeit = DateTime.Now.ToShortTimeString();
+            string jetztZeit = DateTime.Now.ToString("hh_mm");
             string filename = jetztDate + "_" + jetztZeit;
 
             StreamWriter w = File.CreateText(savepath + filename); //pot. IOError (verbotene Zeichen)
@@ -51,7 +54,11 @@ namespace SpotifySimpleManager
 
             for (int i = 0; i < uris.Length; i++)
             {
-                w.WriteLine(uris[i]);
+                w.Write(uris[i]);
+                if (i != uris.Length - 1)
+                {
+                    w.Write("\n"); //Immer außer letzte
+                }
             }
 
             w.Close();
