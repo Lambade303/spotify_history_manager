@@ -45,7 +45,7 @@ namespace SpotifySimpleManager
 
             string jetztDate = DateTime.Now.ToShortDateString();
             string jetztZeit = DateTime.Now.ToString("hh_mm");
-            string filename = jetztDate + "_" + jetztZeit;
+            string filename = jetztDate + "_" + jetztZeit + ".shm";
 
             StreamWriter w = File.CreateText(savepath + filename); //pot. IOError (verbotene Zeichen)
 
@@ -77,7 +77,7 @@ namespace SpotifySimpleManager
                 {
                     DateTime compare = File.GetLastAccessTime(files[i]);
 
-                    if (compare > max)
+                    if (compare > max && files[i].EndsWith(".shm"))
                     {
                         max = compare;
                         latestIndex = i;

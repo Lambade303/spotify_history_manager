@@ -19,7 +19,7 @@ namespace SpotifySimpleManager
         FullPlaylist l303;
         List<PlaylistTrack> l303_tracks;
 
-        private string savefilepath;
+        bool areDiffTracksMarked;
 
         public Steuerung(GUI pGUI)
         {
@@ -30,7 +30,7 @@ namespace SpotifySimpleManager
         public async void InitializeAPIAsync() //Nach GUI-Load aufgerufen
         {
             //AUTHORIZATION
-            SpotifyAPI.Web.Auth.CredentialsAuth auth = new SpotifyAPI.Web.Auth.CredentialsAuth("a9936dcafc7e4ffbad01ea306fc4b267", "6f103a536bf6432892fc44f9eed19ba2");
+            CredentialsAuth auth = new CredentialsAuth("a9936dcafc7e4ffbad01ea306fc4b267", "6f103a536bf6432892fc44f9eed19ba2");
             Token t = await auth.GetToken();
 
             //Erroranzeige-GUI
@@ -65,7 +65,8 @@ namespace SpotifySimpleManager
                     returns[i] = l303_tracks[i].Track.Name;
                 }
 
-                dieGUI.SetListBoxContent(returns);
+                dieGUI.Listbox_SetContent(returns);
+                areDiffTracksMarked = false;
                 return true;
             }
             catch
@@ -84,37 +85,54 @@ namespace SpotifySimpleManager
             dieDaten.SaveURIsToFile(uris);
         }
 
-        public void CompareRequest()
+        public async void PerformCompare()
         {
-            //Spotify URIs schaben
-            // I: Aktuelle Liste laden
-            string[] uri_NEU = new string[l303_tracks.Count];
-            for (int i = 0; i < uri_NEU.Length; i++)
+            if (!areDiffTracksMarked) //nur ausführen, wenn die Tracks nicht gemarked sind
             {
-                uri_NEU[i] = l303_tracks[i].Track.Uri;
+                //Spotify URIs schaben
+                // I: Aktuelle Liste laden
+                string[] uri_NEU = new string[l303_tracks.Count];
+                for (int i = 0; i < uri_NEU.Length; i++)
+                {
+                    uri_NEU[i] = l303_tracks[i].Track.Uri;
+                }
+                // II: Dateiliste laden
+                string[] uri_ALT = dieDaten.GetURIsFromFile();
+
+                // III: CHECKADD (uri_add-Liste) (FROM: NEU, TO: ALT)
+                int[] uri_add = checkDiff(uri_NEU, uri_ALT);
+
+                //IV: CHECKREM (uri_rem-Liste) (FROM: ALT, TO: NEU)
+                int[] uri_rem = checkDiff(uri_ALT, uri_NEU);
+
+                //V: Output GUI
+                dieGUI.Listbox_PaintAddedSongs(uri_add);
+
+                //V.1: REMOVED SONGS neu-hinzufügen
+                for (int i = 0; i < uri_rem.Length; i++)
+                {
+                    int gui_deletedIndex = uri_rem[i];
+                    string songname = await getTrackNameAsync(uri_ALT[gui_deletedIndex]);
+                    dieGUI.Listbox_AddItem(songname, gui_deletedIndex); // Das i-te gelöschte Item (indiziert aus Datei-Uri) wird hinzugefügt
+                }
+                dieGUI.Listbox_PaintRemovedSongs(uri_rem);
+
+                areDiffTracksMarked = true;
             }
-            // II: Dateiliste laden
-            string[] uri_ALT = dieDaten.GetURIsFromFile();
+        }
 
-            // III: CHECKADD (uri_add-Liste) (FROM: NEU, TO: ALT)
-            int[] uri_add = checkDiff(uri_NEU, uri_ALT);
-
-            //IV: CHECKREM (uri_rem-Liste) (FROM: ALT, TO: NEU)
-            int[] uri_rem = checkDiff(uri_ALT, uri_NEU);
-
-            //Output GUI
-            string info = "Hinzugefügt: \n";
-            for (int i = 0; i < uri_add.Length; i++)
-            {
-                info += uri_NEU[uri_add[i]] + "\n";
-            }
-
-            info += "\nEntfernt:\n";
-            for (int i = 0; i < uri_rem.Length; i++)
-            {
-                info += uri_ALT[uri_rem[i]] + "\n";
-            }
-            dieGUI.ShowMessage(info);
+        /// <summary>
+        /// Holt bei bekannter URI den entsprechenden Songnamen per API
+        /// </summary>
+        /// <param name="uri">Die bekannte URI.</param>
+        /// <returns></returns>
+        private async Task<string> getTrackNameAsync(string uri)
+        {
+            //Muster: spotify:track:73CS2GqxxNwhgfg2GJH5kk
+            //Index:  0123456789ABC-14 (Startindex)
+            string id = uri.Substring(14);
+            FullTrack t = await api.GetTrackAsync(id);
+            return t.Name;
         }
 
         /// <summary>
