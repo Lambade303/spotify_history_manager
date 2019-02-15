@@ -28,9 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
-            "ITEM",
-            "SUB"}, -1);
             this.b_get = new System.Windows.Forms.Button();
             this.lbl_internet = new System.Windows.Forms.Label();
             this.b_compare = new System.Windows.Forms.Button();
@@ -87,8 +84,6 @@
             this.lV_cH_name,
             this.lV_cH_status});
             this.lV_tracks.GridLines = true;
-            this.lV_tracks.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
             this.lV_tracks.Location = new System.Drawing.Point(12, 12);
             this.lV_tracks.Name = "lV_tracks";
             this.lV_tracks.ShowItemToolTips = true;

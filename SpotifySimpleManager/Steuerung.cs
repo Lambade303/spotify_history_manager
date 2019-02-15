@@ -82,7 +82,7 @@ namespace SpotifySimpleManager
             {
                 uris[i] = l303_tracks[i].Track.Uri;
             }
-            dieDaten.SaveURIsToFile(uris);
+            dieDaten.SaveURIsToFile(uris, l303.Uri, l303.Name);
         }
 
         public async void PerformCompare()
