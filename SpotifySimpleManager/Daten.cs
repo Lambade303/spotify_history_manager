@@ -39,7 +39,7 @@ namespace SpotifySimpleManager
             return uris;
         }
 
-        public void SaveURIsToFile(string[] uris)
+        public void SaveURIsToFile(string[] uris, string playlist_uri, string playlist_name)
         {
             createDirectory();
 
@@ -47,10 +47,13 @@ namespace SpotifySimpleManager
             string jetztZeit = DateTime.Now.ToString("hh_mm");
             string filename = jetztDate + "_" + jetztZeit + ".shm";
 
-            StreamWriter w = File.CreateText(savepath + filename); //pot. IOError (verbotene Zeichen)
+            StreamWriter w = File.CreateText(savepath + filename);
 
-            w.WriteLine("# " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString()); //Header
-            w.WriteLine(); //Header Ende
+            string header = "# " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString();
+            string playlistinfo = "# " + playlist_uri + " (" + playlist_name + ")";
+
+            w.WriteLine(header);
+            w.WriteLine(playlistinfo);
 
             for (int i = 0; i < uris.Length; i++)
             {
