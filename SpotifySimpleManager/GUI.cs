@@ -38,10 +38,46 @@ namespace SpotifySimpleManager
             api_init = success;
         }
 
-        public void SetListBoxContent(string[] contents)
+        public void Listbox_SetContent(string[] contents)
         {
-            lB_tracks.Items.Clear();
-            lB_tracks.Items.AddRange(contents);
+            lV_tracks.Items.Clear();
+            ListViewItem[] contents_listview = new ListViewItem[contents.Length];
+            for (int i = 0; i < contents_listview.Length; i++)
+            {
+                contents_listview[i] = new ListViewItem(contents[i]);
+            }
+            lV_tracks.Items.AddRange(contents_listview);
+        }
+
+        public void Listbox_PaintAddedSongs(int[] addedSongs)
+        {
+            for (int i = 0; i < addedSongs.Length; i++)
+            {
+                ListViewItem L = lV_tracks.Items[addedSongs[i]];
+                //Farbe
+                L.BackColor = Color.ForestGreen;
+                L.ForeColor = Color.White;
+                //Anzeige (Status)
+                L.SubItems.Add("ADD");
+            }
+        }
+
+        public void Listbox_PaintRemovedSongs(int[] removedSongs)
+        {
+            for (int i = 0; i < removedSongs.Length; i++)
+            {
+                ListViewItem L = lV_tracks.Items[removedSongs[i]];
+                //Farbe
+                L.BackColor = Color.Red;
+                //Anzeige (Status)
+                L.SubItems.Add("REM");
+            }
+        }
+
+        public int Listbox_AddItem(string item, int index)
+        {
+            ListViewItem v = lV_tracks.Items.Insert(index, item);
+            return v.Index;
         }
 
         private async void b_get_Click(object sender, EventArgs e)
@@ -58,7 +94,7 @@ namespace SpotifySimpleManager
 
         private void b_compare_Click(object sender, EventArgs e)
         {
-            dieSteuerung.CompareRequest();
+            dieSteuerung.PerformCompare();
         }
 
         private void b_debugdump_Click(object sender, EventArgs e)
