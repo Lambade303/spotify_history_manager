@@ -10,18 +10,22 @@ namespace SpotifySimpleManager
     {
         private string playlist_uri;
         private string[] uri_added;
-        private string[] uri_removed;
-        private string[] uri_new;
+        private int[] uri_removed;
+        private string[] uri_old;
         private DateTime _timestamp;
 
-        public Commit(string playlist_uri, string[] uri_added, string[] uri_removed, string[] uri_new)
+        public Commit(string playlist_uri, string[] uri_added, int[] uri_removed, string[] uri_old)
         {
-            this.playlist_uri = playlist_uri;
-            this.uri_added = uri_added;
-            this.uri_removed = uri_removed;
-            this.uri_new = uri_new;
+            this.playlist_uri = playlist_uri; //obv.
+            this.uri_added = uri_added; //Die hinzugefügten URIs
+            this.uri_removed = uri_removed; //Die Indizes der entfernten Songs (uri_alt)
+            this.uri_old = uri_old; //Die alte Liste der Songs
             _timestamp = DateTime.Now;
         }
+
+        public string[] GetAdded() => uri_added;
+        public int[] GetRemoved() => uri_removed;
+        public string[] GetOld() => uri_old;
 
         public string GetKomplettpaket()
         {
@@ -30,12 +34,12 @@ namespace SpotifySimpleManager
             header += "# Playlist: " + playlist_uri + "\n";
             string header_indexes; //Hilft beim auslesen eines commits später
             //II: URI ADD
-            int idx_add = 7; //Festgelegt
+            int idx_add = 6; //Festgelegt
 
             string uri_add_teil = "";
             for (int i = 0; i < uri_added.Length; i++)
             {
-                uri_add_teil += uri_added[i];
+                uri_add_teil += uri_added[i] + "\n";
             }
             //III: URI REM
             int idx_rem = idx_add + uri_added.Length + 1; //+1 wegen leerzeile
@@ -43,18 +47,18 @@ namespace SpotifySimpleManager
             string uri_rem_teil = "";
             for (int i = 0; i < uri_removed.Length; i++)
             {
-                uri_rem_teil += uri_removed[i];
+                uri_rem_teil += uri_removed[i] + "\n";
             }
-            //IV: URI NEW Liste
-            int idx_new = idx_rem + uri_removed.Length + 1; //+1 wegen leerzeile
+            //IV: URI OLD Liste
+            int idx_old = idx_rem + uri_removed.Length + 1; //+1 wegen leerzeile
 
-            string uri_new_teil = "";
-            for (int i = 0; i < uri_new.Length; i++)
+            string uri_old_teil = "";
+            for (int i = 0; i < uri_old.Length; i++)
             {
-                uri_new_teil += uri_new[i];
-                if (i != uri_removed.Length - 1)
+                uri_old_teil += uri_old[i];
+                if (i != uri_old.Length - 1)
                 {
-                    uri_new_teil += "\n";
+                    uri_old_teil += "\n";
                 }
             }
 
@@ -62,7 +66,7 @@ namespace SpotifySimpleManager
             header_indexes =
                 "# ADD:" + idx_add + "\n" +
                 "# REM:" + idx_rem + "\n" +
-                "# NEW:" + idx_new + "\n";
+                "# OLD:" + idx_old + "\n";
             string[] returns_array =
             {
                 header,//2 Zeilen
@@ -72,7 +76,7 @@ namespace SpotifySimpleManager
                 "\n", //Leer
                 uri_rem_teil,
                 "\n", //Leer
-                uri_new_teil
+                uri_old_teil
             };
 
             string returns = "";

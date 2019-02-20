@@ -14,10 +14,13 @@ namespace SpotifySimpleManager
     {
         GUI dieGUI;
         Daten dieDaten;
+        Commit derCommit;
+        Listener derListener;
 
         SpotifyWebAPI api;
         FullPlaylist l303;
         List<PlaylistTrack> l303_tracks;
+
 
         bool areDiffTracksMarked;
 
@@ -25,6 +28,8 @@ namespace SpotifySimpleManager
         {
             dieGUI = pGUI;
             dieDaten = new Daten();
+            derListener = new Listener();
+            derListener.OnFullHour += DerListener_OnFullHour;
         }
 
         public async void InitializeAPIAsync() //Nach GUI-Load aufgerufen
@@ -55,6 +60,12 @@ namespace SpotifySimpleManager
             l303_tracks = await getTracksAsync();
         }
 
+        public void StartPlaylistListener()
+        {
+            //Methode: Manuell; Wenn Von Nöten Erinnerung jd.Std.
+
+        }
+
         public bool TracksToGUI()
         {
             try
@@ -77,6 +88,8 @@ namespace SpotifySimpleManager
 
         public void TracksAsDump()
         {
+            ///WIRD SPÄTER BEI LISTENER AUSGEFÜHRT
+
             string[] uris = new string[l303_tracks.Count];
             for (int i = 0; i < uris.Length; i++)
             {
@@ -85,8 +98,16 @@ namespace SpotifySimpleManager
             dieDaten.SaveURIsToFile(uris, l303.Uri, l303.Name);
         }
 
-        public async void PerformCompare()
+        /// <summary>
+        /// <para>Startet den Vergleich.</para>
+        /// <para>Returns: </para>
+        /// <para>false - Playlist ist Gleich (Unverändert zu letztem Dump)</para>
+        /// <para>true - Playlist ist Verschieden (Verändert zu letztem Dump)</para>
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> PerformCompare()
         {
+            bool gleich = true;
             if (!areDiffTracksMarked) //nur ausführen, wenn die Tracks nicht gemarked sind
             {
                 //Spotify URIs schaben
@@ -101,24 +122,59 @@ namespace SpotifySimpleManager
 
                 // III: CHECKADD (uri_add-Liste) (FROM: NEU, TO: ALT)
                 int[] uri_add = checkDiff(uri_NEU, uri_ALT);
+                if (uri_add.Length > 0)
+                    gleich = false;
+
+                string[] uri_add_s = new string[uri_add.Length]; //Für Commit
+                for (int i = 0; i < uri_add_s.Length; i++)
+                {
+                    uri_add_s[i] = uri_NEU[uri_add[i]];
+                }
 
                 //IV: CHECKREM (uri_rem-Liste) (FROM: ALT, TO: NEU)
                 int[] uri_rem = checkDiff(uri_ALT, uri_NEU);
+                if (uri_rem.Length > 0)
+                    gleich = false;
 
-                //V: Output GUI
-                dieGUI.Listbox_PaintAddedSongs(uri_add);
-
-                //V.1: REMOVED SONGS neu-hinzufügen
-                for (int i = 0; i < uri_rem.Length; i++)
+                if (!gleich)
                 {
-                    int gui_deletedIndex = uri_rem[i];
-                    string songname = await getTrackNameAsync(uri_ALT[gui_deletedIndex]);
-                    dieGUI.Listbox_AddItem(songname, gui_deletedIndex); // Das i-te gelöschte Item (indiziert aus Datei-Uri) wird hinzugefügt
-                }
-                dieGUI.Listbox_PaintRemovedSongs(uri_rem);
+                    //V: Output GUI
+                    dieGUI.Listbox_PaintAddedSongs(uri_add);
 
+                    //V.1: REMOVED SONGS neu-hinzufügen
+                    for (int i = 0; i < uri_rem.Length; i++)
+                    {
+                        int gui_deletedIndex = uri_rem[i];
+                        string songname = await getTrackNameAsync(uri_ALT[gui_deletedIndex]);
+                        dieGUI.Listbox_AddItem(songname, gui_deletedIndex); // Das i-te gelöschte Item (indiziert aus Datei-Uri) wird hinzugefügt
+                    }
+                    dieGUI.Listbox_PaintRemovedSongs(uri_rem);
+
+                    derCommit = new Commit(l303.Uri, uri_add_s, uri_rem, uri_ALT);
+
+                }
                 areDiffTracksMarked = true;
             }
+            return gleich;
+        }
+
+        public void SaveCommit()
+        {
+            if (derCommit != null)
+            {
+                dieDaten.PerformCommit(derCommit);
+            }
+            else
+            {
+                dieGUI.ShowMessage("Commit nicht möglich!\nBitte erneut ausführen.");
+            }
+        }
+
+        private async void DerListener_OnFullHour(object sender, EventArgs e)
+        {
+            //Hier wird der Toast aufgerufen, falls ein Commit nötig ist.
+            await RefreshPlaylistDataAsync();
+            bool brauchtUpdate = !await PerformCompare(); //Returned ob die Playlist gleich ist, daher invert
         }
 
         /// <summary>

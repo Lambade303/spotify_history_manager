@@ -15,13 +15,13 @@ namespace SpotifySimpleManager
         {
             //Standard-Savefile
             savepath = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Documents\\SpotifyHistory\\";
+            createDirectory();
         }
 
         public string[] GetURIsFromFile()
         {
-            createDirectory();
-
             string latestPathName = getLatestPathName();
+
             string[] lines;
 
             if (latestPathName != null)
@@ -41,8 +41,6 @@ namespace SpotifySimpleManager
 
         public void SaveURIsToFile(string[] uris, string playlist_uri, string playlist_name)
         {
-            createDirectory();
-
             string jetztDate = DateTime.Now.ToShortDateString();
             string jetztZeit = DateTime.Now.ToString("hh_mm");
             string filename = jetztDate + "_" + jetztZeit + ".shm";
@@ -67,11 +65,29 @@ namespace SpotifySimpleManager
             w.Close();
         }
 
+        public void PerformCommit(Commit c)
+        {
+            //Speichervorgang Commit
+            string jetztDate = DateTime.Now.ToShortDateString();
+            string jetztZeit = DateTime.Now.ToString("hh_mm");
+            string filename = "c_" + jetztDate + "_" + jetztZeit + ".shm";
+
+            StreamWriter w = File.CreateText(savepath + filename);
+            string paket = c.GetKomplettpaket();
+            w.Write(paket);
+            w.Close();
+        }
+
         private string getLatestPathName()
         {
-            createDirectory();
+            string[] files = Directory.GetFileSystemEntries(savepath);
+            string[] files_names = new string[files.Length];
 
-            string[] files = Directory.GetFiles(savepath);
+            for (int i = 0; i < files.Length; i++)
+            {
+                files_names[i] = files[i].Substring(savepath.Length);
+            }
+
             if (files.Length > 0)
             {
                 int latestIndex = -1;
@@ -80,7 +96,7 @@ namespace SpotifySimpleManager
                 {
                     DateTime compare = File.GetLastAccessTime(files[i]);
 
-                    if (compare > max && files[i].EndsWith(".shm"))
+                    if (compare > max && files_names[i].EndsWith(".shm") && !files_names[i].StartsWith("c_")) // Compare ist neuer als Max und die Datei ist in der Form "![c_] *.shm"
                     {
                         max = compare;
                         latestIndex = i;
