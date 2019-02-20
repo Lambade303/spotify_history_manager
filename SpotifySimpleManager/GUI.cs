@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace SpotifySimpleManager
 {
@@ -24,6 +25,10 @@ namespace SpotifySimpleManager
         private void GUI_Load(object sender, EventArgs e)
         {
             dieSteuerung.InitializeAPIAsync();
+        }
+
+        public void ShowToast(string Message)
+        {
         }
 
         public void ShowMessage(string Message)
@@ -95,11 +100,32 @@ namespace SpotifySimpleManager
         private void b_compare_Click(object sender, EventArgs e)
         {
             dieSteuerung.PerformCompare();
+            b_commit.Enabled = true;
         }
 
         private void b_debugdump_Click(object sender, EventArgs e)
         {
             dieSteuerung.TracksAsDump();
+        }
+
+        private void b_commit_Click(object sender, EventArgs e)
+        {
+            dieSteuerung.SaveCommit();
+        }
+
+        private void menu_commit_save_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void menu_commit_load_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void menu_playlist_laden_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
