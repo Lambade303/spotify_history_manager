@@ -4,31 +4,49 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Toolkit.Uwp.Notifications;
+using Windows.UI.Notifications;
+using Windows.Data.Xml.Dom;
+
 
 namespace SpotifySimpleManager
 {
     public partial class GUI : Form
     {
+        /* Discarded Windows UI Notifications
+        [ClassInterface(ClassInterfaceType.None)]
+        [ComSourceInterfaces(typeof(INotificationActivationCallback))]
+        [Guid("1ebfcb8f-d08f-4a67-b2d9-148feb8c7131"), ComVisible(true)]
+        public class MyNotificationActivator : NotificationActivator
+        {
+            public MyNotificationActivator()
+            {
+                DesktopNotificationManagerCompat.RegisterAumidAndComServer<MyNotificationActivator>("AlexPflug1512.SpotifyHM");
+            }
+            public override void OnActivated(string arguments, NotificationUserInput userInput, string appUserModelId)
+            {
+                MessageBox.Show("OnActivated ausgelöst!");
+            }
+        }*/
+
         private Steuerung dieSteuerung;
+        private ReminderUI derReminder;
         private bool api_init;
 
         public GUI()
         {
             InitializeComponent();
             dieSteuerung = new Steuerung(this);
-        }
-
-        private void GUI_Load(object sender, EventArgs e)
-        {
-            dieSteuerung.InitializeAPIAsync();
+            derReminder = new ReminderUI();
         }
 
         public void ShowToast(string Message)
         {
+            derReminder.Show(Message, true, 3000);
         }
 
         public void ShowMessage(string Message)
@@ -85,22 +103,9 @@ namespace SpotifySimpleManager
             return v.Index;
         }
 
-        private async void b_get_Click(object sender, EventArgs e)
+        private void GUI_Load(object sender, EventArgs e)
         {
-            if (api_init)
-            {
-                await dieSteuerung.RefreshPlaylistDataAsync();
-
-                bool success = dieSteuerung.TracksToGUI();
-                b_compare.Enabled = success;
-
-            }
-        }
-
-        private void b_compare_Click(object sender, EventArgs e)
-        {
-            dieSteuerung.PerformCompare();
-            b_commit.Enabled = true;
+            dieSteuerung.InitializeAPIAsync();
         }
 
         private void b_debugdump_Click(object sender, EventArgs e)
@@ -108,14 +113,11 @@ namespace SpotifySimpleManager
             dieSteuerung.TracksAsDump();
         }
 
-        private void b_commit_Click(object sender, EventArgs e)
+        private async void menu_commit_save_Click(object sender, EventArgs e)
         {
-            dieSteuerung.SaveCommit();
-        }
-
-        private void menu_commit_save_Click(object sender, EventArgs e)
-        {
-
+            await dieSteuerung.PerformCompare(); //Erstellen des Commits
+            dieSteuerung.SaveCommit(); //Speichern des Commits
+            dieSteuerung.TracksAsDump(); //Dumpen für Fortschrittsanzeige
         }
 
         private void menu_commit_load_Click(object sender, EventArgs e)
@@ -123,9 +125,16 @@ namespace SpotifySimpleManager
 
         }
 
-        private void menu_playlist_laden_Click(object sender, EventArgs e)
+        private async void menu_playlist_laden_Click(object sender, EventArgs e)
         {
+            if (api_init)
+            {
+                await dieSteuerung.RefreshPlaylistDataAsync();
 
+                bool success = dieSteuerung.TracksToGUI();
+                menu_commit_save.Enabled = true;
+
+            }
         }
     }
 }
