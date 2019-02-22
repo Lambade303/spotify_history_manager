@@ -63,7 +63,7 @@ namespace SpotifySimpleManager
         public void StartPlaylistListener()
         {
             //Methode: Manuell; Wenn Von Nöten Erinnerung jd.Std.
-
+            derListener.Start();
         }
 
         public bool TracksToGUI()
