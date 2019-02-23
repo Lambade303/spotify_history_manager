@@ -43,6 +43,8 @@
             this.menu_listener = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_listener_starten = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_listener_stoppen = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileDialog_commit = new System.Windows.Forms.OpenFileDialog();
+            this.b_debughour = new System.Windows.Forms.Button();
             this.menu_main.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -144,7 +146,7 @@
             // menu_playlist_laden
             // 
             this.menu_playlist_laden.Name = "menu_playlist_laden";
-            this.menu_playlist_laden.Size = new System.Drawing.Size(143, 22);
+            this.menu_playlist_laden.Size = new System.Drawing.Size(180, 22);
             this.menu_playlist_laden.Text = "Playlist laden";
             this.menu_playlist_laden.Click += new System.EventHandler(this.menu_playlist_laden_Click);
             // 
@@ -162,18 +164,37 @@
             this.menu_listener_starten.Name = "menu_listener_starten";
             this.menu_listener_starten.Size = new System.Drawing.Size(162, 22);
             this.menu_listener_starten.Text = "Listener Starten";
+            this.menu_listener_starten.Click += new System.EventHandler(this.menu_listener_starten_Click);
             // 
             // menu_listener_stoppen
             // 
             this.menu_listener_stoppen.Name = "menu_listener_stoppen";
             this.menu_listener_stoppen.Size = new System.Drawing.Size(162, 22);
             this.menu_listener_stoppen.Text = "Listener Stoppen";
+            this.menu_listener_stoppen.Click += new System.EventHandler(this.menu_listener_stoppen_Click);
+            // 
+            // fileDialog_commit
+            // 
+            this.fileDialog_commit.DefaultExt = "shm";
+            this.fileDialog_commit.Filter = "Commit-Dateien|c_*.shm";
+            this.fileDialog_commit.InitialDirectory = "%USERPROFILE%/Documents/SpotifyHistoryManager";
+            // 
+            // b_debughour
+            // 
+            this.b_debughour.Location = new System.Drawing.Point(298, 397);
+            this.b_debughour.Name = "b_debughour";
+            this.b_debughour.Size = new System.Drawing.Size(93, 23);
+            this.b_debughour.TabIndex = 9;
+            this.b_debughour.Text = "Debug/FullHour";
+            this.b_debughour.UseVisualStyleBackColor = true;
+            this.b_debughour.Click += new System.EventHandler(this.b_debughour_Click);
             // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(419, 474);
+            this.Controls.Add(this.b_debughour);
             this.Controls.Add(this.lV_tracks);
             this.Controls.Add(this.b_debugdump);
             this.Controls.Add(this.lbl_internet);
@@ -205,6 +226,8 @@
         private System.Windows.Forms.ToolStripMenuItem menu_listener;
         private System.Windows.Forms.ToolStripMenuItem menu_listener_starten;
         private System.Windows.Forms.ToolStripMenuItem menu_listener_stoppen;
+        private System.Windows.Forms.OpenFileDialog fileDialog_commit;
+        private System.Windows.Forms.Button b_debughour;
     }
 }
 
