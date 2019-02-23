@@ -44,6 +44,7 @@
             this.lbl_ueberschrift.TabIndex = 0;
             this.lbl_ueberschrift.Text = "Spotify History Manager";
             this.lbl_ueberschrift.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbl_ueberschrift.Click += new System.EventHandler(this.irgendwas_click);
             // 
             // lbl_message
             // 
@@ -54,6 +55,7 @@
             this.lbl_message.TabIndex = 1;
             this.lbl_message.Text = "<<MESSAGE>>";
             this.lbl_message.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbl_message.Click += new System.EventHandler(this.irgendwas_click);
             // 
             // pB_bild
             // 
@@ -63,6 +65,7 @@
             this.pB_bild.Size = new System.Drawing.Size(60, 60);
             this.pB_bild.TabIndex = 2;
             this.pB_bild.TabStop = false;
+            this.pB_bild.Click += new System.EventHandler(this.irgendwas_click);
             // 
             // ReminderUI
             // 
@@ -83,6 +86,7 @@
             this.Text = "Reminder";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.Reminder_Load);
+            this.Click += new System.EventHandler(this.irgendwas_click);
             ((System.ComponentModel.ISupportInitialize)(this.pB_bild)).EndInit();
             this.ResumeLayout(false);
 

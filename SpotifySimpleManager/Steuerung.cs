@@ -23,6 +23,7 @@ namespace SpotifySimpleManager
 
 
         bool areDiffTracksMarked;
+        bool isPlaylistOnGUI;
 
         public Steuerung(GUI pGUI)
         {
@@ -58,12 +59,21 @@ namespace SpotifySimpleManager
         {
             l303 = api.GetPlaylist("lambade303", "6YiI6sO5TyAtHDYanlKIjM"); //Codeb.: 6YiI6sO5TyAtHDYanlKIjM; Lambade: 0Yk8TlHuFCGELX2EZHTRZ4
             l303_tracks = await getTracksAsync();
+
+            isPlaylistOnGUI = false;
         }
 
         public void StartPlaylistListener()
         {
             //Methode: Manuell; Wenn Von Nöten Erinnerung jd.Std.
             derListener.Start();
+            dieGUI.ShowToast("Playlist-Listener gestartet für: " + l303.Name);
+        }
+
+        public void StopPlaylistListener()
+        {
+            derListener.Stop();
+            dieGUI.ShowToast("Playlist-Listener gestoppt für: " + l303.Name);
         }
 
         public bool TracksToGUI()
@@ -78,6 +88,8 @@ namespace SpotifySimpleManager
 
                 dieGUI.Listbox_SetContent(returns);
                 areDiffTracksMarked = false;
+
+                isPlaylistOnGUI = true;
                 return true;
             }
             catch
@@ -139,21 +151,22 @@ namespace SpotifySimpleManager
                 if (!gleich)
                 {
                     //V: Output GUI
-                    dieGUI.Listbox_PaintAddedSongs(uri_add);
-
-                    //V.1: REMOVED SONGS neu-hinzufügen
-                    for (int i = 0; i < uri_rem.Length; i++)
+                    if (isPlaylistOnGUI)
                     {
-                        int gui_deletedIndex = uri_rem[i];
-                        string songname = await getTrackNameAsync(uri_ALT[gui_deletedIndex]);
-                        dieGUI.Listbox_AddItem(songname, gui_deletedIndex); // Das i-te gelöschte Item (indiziert aus Datei-Uri) wird hinzugefügt
+                        dieGUI.Listbox_PaintAddedSongs(uri_add);
+
+                        //V.1: REMOVED SONGS neu-hinzufügen
+                        for (int i = 0; i < uri_rem.Length; i++)
+                        {
+                            int gui_deletedIndex = uri_rem[i];
+                            string songname = await getTrackNameAsync(uri_ALT[gui_deletedIndex]);
+                            dieGUI.Listbox_AddItem(songname, gui_deletedIndex); // Das i-te gelöschte Item (indiziert aus Datei-Uri) wird hinzugefügt
+                        }
+                        dieGUI.Listbox_PaintRemovedSongs(uri_rem);
+                        areDiffTracksMarked = true;
                     }
-                    dieGUI.Listbox_PaintRemovedSongs(uri_rem);
-
                     derCommit = new Commit(l303.Uri, uri_add_s, uri_rem, uri_ALT);
-
                 }
-                areDiffTracksMarked = true;
             }
             return gleich;
         }
@@ -170,11 +183,46 @@ namespace SpotifySimpleManager
             }
         }
 
+        public async void LoadCommit(string pathName)
+        {
+            //Commit holen
+            derCommit = dieDaten.GetCommitAt(pathName);
+
+            //Commit anzeigen
+            string[] tracks = derCommit.GetOld();
+            for (int i = 0; i < tracks.Length; i++)
+            {
+                tracks[i] = await getTrackNameAsync(tracks[i]);
+            }
+
+            dieGUI.Listbox_SetContent(tracks);
+
+            string[] addedTracksItems = derCommit.GetAdded();
+            for (int i = 0; i < addedTracksItems.Length; i++)
+            {
+                string track_name = await getTrackNameAsync(addedTracksItems[i]);
+                int index = dieGUI.Listbox_AddItem(track_name);
+                dieGUI.Listbox_PaintAddedSongs(index);
+            }
+
+            int[] uri_rem = derCommit.GetRemoved();
+            dieGUI.Listbox_PaintRemovedSongs(uri_rem);
+        }
+
+        public void InvokeOnFullHour()
+        {
+            DerListener_OnFullHour(this, new EventArgs());
+        }
+
         private async void DerListener_OnFullHour(object sender, EventArgs e)
         {
             //Hier wird der Toast aufgerufen, falls ein Commit nötig ist.
             await RefreshPlaylistDataAsync();
             bool brauchtUpdate = !await PerformCompare(); //Returned ob die Playlist gleich ist, daher invert
+            if (brauchtUpdate)
+            {
+                dieGUI.ShowToast("Die Playlist " + l303.Name + " ist nicht mehr synchronisiert.\nEin Commit ist nötig!");
+            }
         }
 
         /// <summary>

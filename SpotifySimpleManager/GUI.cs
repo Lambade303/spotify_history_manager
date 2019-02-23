@@ -17,22 +17,6 @@ namespace SpotifySimpleManager
 {
     public partial class GUI : Form
     {
-        /* Discarded Windows UI Notifications
-        [ClassInterface(ClassInterfaceType.None)]
-        [ComSourceInterfaces(typeof(INotificationActivationCallback))]
-        [Guid("1ebfcb8f-d08f-4a67-b2d9-148feb8c7131"), ComVisible(true)]
-        public class MyNotificationActivator : NotificationActivator
-        {
-            public MyNotificationActivator()
-            {
-                DesktopNotificationManagerCompat.RegisterAumidAndComServer<MyNotificationActivator>("AlexPflug1512.SpotifyHM");
-            }
-            public override void OnActivated(string arguments, NotificationUserInput userInput, string appUserModelId)
-            {
-                MessageBox.Show("OnActivated ausgelöst!");
-            }
-        }*/
-
         private Steuerung dieSteuerung;
         private ReminderUI derReminder;
         private bool api_init;
@@ -41,7 +25,7 @@ namespace SpotifySimpleManager
         {
             InitializeComponent();
             dieSteuerung = new Steuerung(this);
-            derReminder = new ReminderUI();
+            derReminder = new ReminderUI(this);
         }
 
         public void ShowToast(string Message)
@@ -72,7 +56,7 @@ namespace SpotifySimpleManager
             lV_tracks.Items.AddRange(contents_listview);
         }
 
-        public void Listbox_PaintAddedSongs(int[] addedSongs)
+        public void Listbox_PaintAddedSongs(params int[] addedSongs)
         {
             for (int i = 0; i < addedSongs.Length; i++)
             {
@@ -85,7 +69,7 @@ namespace SpotifySimpleManager
             }
         }
 
-        public void Listbox_PaintRemovedSongs(int[] removedSongs)
+        public void Listbox_PaintRemovedSongs(params int[] removedSongs)
         {
             for (int i = 0; i < removedSongs.Length; i++)
             {
@@ -97,10 +81,20 @@ namespace SpotifySimpleManager
             }
         }
 
-        public int Listbox_AddItem(string item, int index)
+        public void Listbox_AddItem(string item, int index)
         {
             ListViewItem v = lV_tracks.Items.Insert(index, item);
+        }
+
+        public int Listbox_AddItem(string item)
+        {
+            ListViewItem v = lV_tracks.Items.Add(item);
             return v.Index;
+        }
+
+        public void ReminderUI_Clicked()
+        {
+            //GUI Anzeigen, Commit ausführen? vllt mit ReminderUI.Status-Enum Art der Nachricht im ReminderUI übergeben?
         }
 
         private void GUI_Load(object sender, EventArgs e)
@@ -122,19 +116,47 @@ namespace SpotifySimpleManager
 
         private void menu_commit_load_Click(object sender, EventArgs e)
         {
-
+            menu_commit_save.Enabled = false;
+            DialogResult d = fileDialog_commit.ShowDialog();
+            if (d != DialogResult.Cancel) //Fehlerquelle vllt
+            {
+                string selectedPath = fileDialog_commit.FileName;
+                dieSteuerung.LoadCommit(selectedPath);
+            }
         }
 
         private async void menu_playlist_laden_Click(object sender, EventArgs e)
         {
             if (api_init)
             {
-                await dieSteuerung.RefreshPlaylistDataAsync();
-
-                bool success = dieSteuerung.TracksToGUI();
-                menu_commit_save.Enabled = true;
+                try
+                {
+                    await dieSteuerung.RefreshPlaylistDataAsync();
+                    bool success = dieSteuerung.TracksToGUI();
+                    bool gleich = await dieSteuerung.PerformCompare();
+                    menu_commit_save.Enabled = !gleich;
+                }
+                catch (Exception ex)
+                {
+                    ShowMessage("Ein Fehler ist beim Laden aufgetreten:\n" + ex.Message);
+                }
 
             }
+        }
+
+        private void menu_listener_starten_Click(object sender, EventArgs e)
+        {
+            dieSteuerung.StartPlaylistListener();
+        }
+
+        private void menu_listener_stoppen_Click(object sender, EventArgs e)
+        {
+            dieSteuerung.StopPlaylistListener();
+        }
+
+        private void b_debughour_Click(object sender, EventArgs e)
+        {
+            dieSteuerung.InvokeOnFullHour();
         }
     }
 }

@@ -39,6 +39,61 @@ namespace SpotifySimpleManager
             return uris;
         }
 
+        public Commit GetCommitAt(string PathName)
+        {
+            //Überprüfen ob das auch ein CommitFile ist
+            //todo
+            //
+
+            string[] lines;
+
+            if (PathName != null)
+            {
+                lines = File.ReadAllLines(PathName);
+            }
+            else return null; //gibt keine Uris
+
+            string uri_playlist = lines[1].Substring(12); //Konstant immer auf 12
+            int idx_add = Convert.ToInt32(lines[2].Substring(6)); //Konstant ab 6
+            int idx_rem = Convert.ToInt32(lines[3].Substring(6));
+            int idx_old = Convert.ToInt32(lines[4].Substring(6));
+
+            //TIMESTAMP
+            DateTime ts = DateTime.ParseExact(lines[0].Substring(2), "dd.MM.yyyy ~ HH:mm", new System.Globalization.CultureInfo("de-DE"));
+
+            //ADD
+            List<string> addList = new List<string>();
+            int i = idx_add;
+            while (lines[i] != "")
+            {
+                addList.Add(lines[i]);
+                i++;
+            }
+
+            string[] uri_add = addList.ToArray();
+
+            List<int> remList = new List<int>();
+            //REM
+            i = idx_rem;
+            while (lines[i] != "")
+            {
+                remList.Add(Convert.ToInt32(lines[i]));
+                i++;
+            }
+
+            int[] uri_rem = remList.ToArray();
+            //OLD
+            string[] old_uris = new string[lines.Length - idx_old];
+            for (int j = 0; j < old_uris.Length; j++)
+            {
+                old_uris[j] = lines[j + idx_old];
+            }
+
+            Commit returns = new Commit(ts, uri_playlist, uri_add, uri_rem, old_uris);
+
+            return returns;
+        }
+
         public void SaveURIsToFile(string[] uris, string playlist_uri, string playlist_name)
         {
             string jetztDate = DateTime.Now.ToShortDateString();
