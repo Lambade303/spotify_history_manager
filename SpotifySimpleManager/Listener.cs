@@ -27,6 +27,8 @@ namespace SpotifySimpleManager
 
         public void Stop() => derTimer.Stop();
 
+        public bool GetEnabled() => derTimer.Enabled;
+
         private void DerTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             int newHour = DateTime.Now.Hour;

@@ -23,6 +23,15 @@ namespace SpotifySimpleManager
             _timestamp = DateTime.Now;
         }
 
+        public Commit(DateTime timestamp, string playlist_uri, string[] uri_added, int[] uri_removed, string[] uri_old)
+        {
+            this.playlist_uri = playlist_uri; //obv.
+            this.uri_added = uri_added; //Die hinzugefügten URIs
+            this.uri_removed = uri_removed; //Die Indizes der entfernten Songs (uri_alt)
+            this.uri_old = uri_old; //Die alte Liste der Songs
+            _timestamp = timestamp;
+        }
+
         public string[] GetAdded() => uri_added;
         public int[] GetRemoved() => uri_removed;
         public string[] GetOld() => uri_old;
