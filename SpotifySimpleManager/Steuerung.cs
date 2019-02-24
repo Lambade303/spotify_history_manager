@@ -57,7 +57,7 @@ namespace SpotifySimpleManager
 
         public async Task RefreshPlaylistDataAsync()
         {
-            l303 = api.GetPlaylist("lambade303", "6YiI6sO5TyAtHDYanlKIjM"); //Codeb.: 6YiI6sO5TyAtHDYanlKIjM; Lambade: 0Yk8TlHuFCGELX2EZHTRZ4
+            l303 = api.GetPlaylist("lambade303", "0Yk8TlHuFCGELX2EZHTRZ4"); //Codeb.: 6YiI6sO5TyAtHDYanlKIjM; Lambade: 0Yk8TlHuFCGELX2EZHTRZ4
             l303_tracks = await getTracksAsync();
 
             isPlaylistOnGUI = false;
@@ -130,7 +130,7 @@ namespace SpotifySimpleManager
                     uri_NEU[i] = l303_tracks[i].Track.Uri;
                 }
                 // II: Dateiliste laden
-                string[] uri_ALT = dieDaten.GetURIsFromFile();
+                string[] uri_ALT = dieDaten.GetURIsFromFile(l303.Uri);
 
                 // III: CHECKADD (uri_add-Liste) (FROM: NEU, TO: ALT)
                 int[] uri_add = checkDiff(uri_NEU, uri_ALT);
@@ -190,17 +190,15 @@ namespace SpotifySimpleManager
 
             //Commit anzeigen
             string[] tracks = derCommit.GetOld();
-            for (int i = 0; i < tracks.Length; i++)
-            {
-                tracks[i] = await getTrackNameAsync(tracks[i]);
-            }
+            tracks = await getSeveralTracksNamesAsync(tracks);
 
             dieGUI.Listbox_SetContent(tracks);
 
             string[] addedTracksItems = derCommit.GetAdded();
+            string[] addedTracksNames = await getSeveralTracksNamesAsync(addedTracksItems);
             for (int i = 0; i < addedTracksItems.Length; i++)
             {
-                string track_name = await getTrackNameAsync(addedTracksItems[i]);
+                string track_name = addedTracksNames[i];
                 int index = dieGUI.Listbox_AddItem(track_name);
                 dieGUI.Listbox_PaintAddedSongs(index);
             }
@@ -209,7 +207,7 @@ namespace SpotifySimpleManager
             dieGUI.Listbox_PaintRemovedSongs(uri_rem);
         }
 
-        public void InvokeOnFullHour()
+        public void InvokeOnFullHour() //Nur Debug
         {
             DerListener_OnFullHour(this, new EventArgs());
         }
@@ -232,11 +230,32 @@ namespace SpotifySimpleManager
         /// <returns></returns>
         private async Task<string> getTrackNameAsync(string uri)
         {
-            //Muster: spotify:track:73CS2GqxxNwhgfg2GJH5kk
-            //Index:  0123456789ABC-14 (Startindex)
-            string id = uri.Substring(14);
+            string id = uri.Substring(14); //Konstante
             FullTrack t = await api.GetTrackAsync(id);
             return t.Name;
+        }
+
+        private async Task<string[]> getSeveralTracksNamesAsync(string[] uris)
+        {
+            string[] id = new string[uris.Length];
+            for (int i = 0; i < id.Length; i++)
+            {
+                id[i] = uris[i].Substring(14);
+            }
+
+            string[] tracksNames = new string[uris.Length];
+            for (int i = 0; i < uris.Length; i += 50)
+            {
+                int amount = (i + 50 > uris.Length) ? uris.Length - i : 50;
+                SeveralTracks s = await api.GetSeveralTracksAsync(id.ToList().GetRange(i, amount)); //Gettet nur 50x
+
+                for (int j = 0; j < s.Tracks.Count; j++)
+                {
+                    tracksNames[i + j] = s.Tracks[j].Name;
+                }
+            }
+
+            return tracksNames;
         }
 
         /// <summary>
