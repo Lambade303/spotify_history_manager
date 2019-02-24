@@ -18,9 +18,9 @@ namespace SpotifySimpleManager
             createDirectory();
         }
 
-        public string[] GetURIsFromFile()
+        public string[] GetURIsFromFile(string playlist_uri)
         {
-            string latestPathName = getLatestPathName();
+            string latestPathName = getLatestPathName(playlist_uri);
 
             string[] lines;
 
@@ -103,7 +103,7 @@ namespace SpotifySimpleManager
             StreamWriter w = File.CreateText(savepath + filename);
 
             string header = "# " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString();
-            string playlistinfo = "# " + playlist_uri + " (" + playlist_name + ")";
+            string playlistinfo = "# " + playlist_uri;
 
             w.WriteLine(header);
             w.WriteLine(playlistinfo);
@@ -133,10 +133,11 @@ namespace SpotifySimpleManager
             w.Close();
         }
 
-        private string getLatestPathName()
+        private string getLatestPathName(string playlist_uri)
         {
             string[] files = Directory.GetFileSystemEntries(savepath);
             string[] files_names = new string[files.Length];
+            string latest_file = null;
 
             for (int i = 0; i < files.Length; i++)
             {
@@ -157,9 +158,22 @@ namespace SpotifySimpleManager
                         latestIndex = i;
                     }
                 }
-                return files[latestIndex];
+                latest_file = files[latestIndex];
             }
-            else return null;
+
+            if (!String.IsNullOrEmpty(latest_file))
+            {
+                StreamReader r = new StreamReader(latest_file);
+                r.ReadLine(); //Zeitstempel
+                string uri_zeile = r.ReadLine();
+                string uri = uri_zeile.Substring(2);
+
+                if (uri == playlist_uri)
+                {
+                    return latest_file;
+                }
+            }
+            return null;
         }
 
         private void createDirectory()
