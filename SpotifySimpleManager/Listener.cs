@@ -31,6 +31,7 @@ namespace SpotifySimpleManager
 
         private void DerTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            //NewHour
             int newHour = DateTime.Now.Hour;
             if (lastHour < newHour || (lastHour == 23 && newHour == 0)) //Jede volle Stunde
             {
