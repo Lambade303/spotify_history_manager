@@ -45,13 +45,16 @@ namespace SpotifySimpleManager
             api_init = success;
         }
 
-        public void Listbox_SetContent(string[] contents)
+        public void Listbox_SetContent(string[] contents, string[] information)
         {
             lV_tracks.Items.Clear();
             ListViewItem[] contents_listview = new ListViewItem[contents.Length];
             for (int i = 0; i < contents_listview.Length; i++)
             {
-                contents_listview[i] = new ListViewItem(contents[i]);
+                contents_listview[i] = new ListViewItem(contents[i])
+                {
+                    ToolTipText = information[i],
+                };
             }
             lV_tracks.Items.AddRange(contents_listview);
         }
@@ -90,6 +93,13 @@ namespace SpotifySimpleManager
         {
             ListViewItem v = lV_tracks.Items.Add(item);
             return v.Index;
+        }
+
+        public void SetPlaylistInfo(string playlist_name, string playlist_author, int playlist_songscount)
+        {
+            lbl_playlist_Name.Text = "Playlist: " + playlist_name;
+            lbl_playlist_author.Text = "von: " + playlist_author;
+            lbl_playlist_songanz.Text = "Songs#: " + playlist_songscount.ToString();
         }
 
         public void ReminderUI_Clicked()
@@ -131,14 +141,13 @@ namespace SpotifySimpleManager
             {
                 try
                 {
-                    await dieSteuerung.RefreshPlaylistDataAsync();
                     bool success = dieSteuerung.TracksToGUI();
                     bool gleich = await dieSteuerung.PerformCompare();
                     menu_commit_save.Enabled = !gleich;
                 }
-                catch (Exception ex)
+                catch
                 {
-                    ShowMessage("Ein Fehler ist beim Laden aufgetreten:\n" + ex.Message);
+                    ShowMessage("Ein Fehler ist beim Laden aufgetreten");
                 }
 
             }
@@ -157,6 +166,11 @@ namespace SpotifySimpleManager
         private void b_debughour_Click(object sender, EventArgs e)
         {
             dieSteuerung.InvokeOnFullHour();
+        }
+
+        private void menu_playlist_refresh_Click(object sender, EventArgs e)
+        {
+            dieSteuerung.RefreshPlaylistDataAsync();
         }
     }
 }

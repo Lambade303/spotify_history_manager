@@ -60,6 +60,8 @@ namespace SpotifySimpleManager
             l303 = api.GetPlaylist("lambade303", "0Yk8TlHuFCGELX2EZHTRZ4"); //Codeb.: 6YiI6sO5TyAtHDYanlKIjM; Lambade: 0Yk8TlHuFCGELX2EZHTRZ4
             l303_tracks = await getTracksAsync();
 
+            dieGUI.SetPlaylistInfo(l303.Name, l303.Owner.DisplayName, l303.Tracks.Total);
+
             isPlaylistOnGUI = false;
         }
 
@@ -81,12 +83,24 @@ namespace SpotifySimpleManager
             try
             {
                 string[] returns = new string[l303_tracks.Count];
+                string[] infos = new string[l303_tracks.Count];
+
                 for (int i = 0; i < returns.Length; i++)
                 {
                     returns[i] = l303_tracks[i].Track.Name;
+
+                    SimpleArtist[] a = l303_tracks[i].Track.Artists.ToArray();
+                    string[] a_name = new string[a.Length];
+                    for (int j = 0; j < a.Length; j++)
+                    {
+                        a_name[j] = a[j].Name;
+                    }
+
+                    infos[i] = "URI: " + l303_tracks[i].Track.Uri + "\n" +
+                        "Künstler: " + String.Join(", ", a_name);
                 }
 
-                dieGUI.Listbox_SetContent(returns);
+                dieGUI.Listbox_SetContent(returns, infos);
                 areDiffTracksMarked = false;
 
                 isPlaylistOnGUI = true;
@@ -192,7 +206,7 @@ namespace SpotifySimpleManager
             string[] tracks = derCommit.GetOld();
             tracks = await getSeveralTracksNamesAsync(tracks);
 
-            dieGUI.Listbox_SetContent(tracks);
+            dieGUI.Listbox_SetContent(tracks, null);
 
             string[] addedTracksItems = derCommit.GetAdded();
             string[] addedTracksNames = await getSeveralTracksNamesAsync(addedTracksItems);
