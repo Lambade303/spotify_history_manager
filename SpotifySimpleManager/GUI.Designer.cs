@@ -40,6 +40,7 @@
             this.menu_commit_load = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_playlist = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_playlist_laden = new System.Windows.Forms.ToolStripMenuItem();
+            this.menu_playlist_refresh = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_listener = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_listener_starten = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_listener_stoppen = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,7 +51,7 @@
             this.lbl_playlist_songanz = new System.Windows.Forms.Label();
             this.group_debug = new System.Windows.Forms.GroupBox();
             this.group_playlist = new System.Windows.Forms.GroupBox();
-            this.menu_playlist_refresh = new System.Windows.Forms.ToolStripMenuItem();
+            this.lbl_playlist_access = new System.Windows.Forms.Label();
             this.menu_main.SuspendLayout();
             this.group_debug.SuspendLayout();
             this.group_playlist.SuspendLayout();
@@ -159,6 +160,13 @@
             this.menu_playlist_laden.Text = "Playlist laden und vergleichen";
             this.menu_playlist_laden.Click += new System.EventHandler(this.menu_playlist_laden_Click);
             // 
+            // menu_playlist_refresh
+            // 
+            this.menu_playlist_refresh.Name = "menu_playlist_refresh";
+            this.menu_playlist_refresh.Size = new System.Drawing.Size(231, 22);
+            this.menu_playlist_refresh.Text = "Playlist-Daten refreshen (!)";
+            this.menu_playlist_refresh.Click += new System.EventHandler(this.menu_playlist_refresh_Click);
+            // 
             // menu_listener
             // 
             this.menu_listener.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -202,14 +210,14 @@
             // 
             this.lbl_playlist_Name.Location = new System.Drawing.Point(6, 32);
             this.lbl_playlist_Name.Name = "lbl_playlist_Name";
-            this.lbl_playlist_Name.Size = new System.Drawing.Size(97, 52);
+            this.lbl_playlist_Name.Size = new System.Drawing.Size(97, 41);
             this.lbl_playlist_Name.TabIndex = 10;
             this.lbl_playlist_Name.Text = " ";
             this.lbl_playlist_Name.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lbl_playlist_author
             // 
-            this.lbl_playlist_author.Location = new System.Drawing.Point(6, 84);
+            this.lbl_playlist_author.Location = new System.Drawing.Point(6, 73);
             this.lbl_playlist_author.Name = "lbl_playlist_author";
             this.lbl_playlist_author.Size = new System.Drawing.Size(97, 15);
             this.lbl_playlist_author.TabIndex = 11;
@@ -218,7 +226,7 @@
             // 
             // lbl_playlist_songanz
             // 
-            this.lbl_playlist_songanz.Location = new System.Drawing.Point(6, 99);
+            this.lbl_playlist_songanz.Location = new System.Drawing.Point(6, 88);
             this.lbl_playlist_songanz.Name = "lbl_playlist_songanz";
             this.lbl_playlist_songanz.Size = new System.Drawing.Size(97, 15);
             this.lbl_playlist_songanz.TabIndex = 12;
@@ -238,22 +246,25 @@
             // 
             // group_playlist
             // 
+            this.group_playlist.Controls.Add(this.lbl_playlist_access);
             this.group_playlist.Controls.Add(this.lbl_playlist_Name);
             this.group_playlist.Controls.Add(this.lbl_playlist_author);
             this.group_playlist.Controls.Add(this.lbl_playlist_songanz);
             this.group_playlist.Location = new System.Drawing.Point(298, 42);
             this.group_playlist.Name = "group_playlist";
-            this.group_playlist.Size = new System.Drawing.Size(109, 117);
+            this.group_playlist.Size = new System.Drawing.Size(109, 145);
             this.group_playlist.TabIndex = 14;
             this.group_playlist.TabStop = false;
             this.group_playlist.Text = "Playlist-Info";
             // 
-            // menu_playlist_refresh
+            // lbl_playlist_access
             // 
-            this.menu_playlist_refresh.Name = "menu_playlist_refresh";
-            this.menu_playlist_refresh.Size = new System.Drawing.Size(231, 22);
-            this.menu_playlist_refresh.Text = "Playlist-Daten refreshen (!)";
-            this.menu_playlist_refresh.Click += new System.EventHandler(this.menu_playlist_refresh_Click);
+            this.lbl_playlist_access.Location = new System.Drawing.Point(6, 127);
+            this.lbl_playlist_access.Name = "lbl_playlist_access";
+            this.lbl_playlist_access.Size = new System.Drawing.Size(97, 15);
+            this.lbl_playlist_access.TabIndex = 13;
+            this.lbl_playlist_access.Text = " ";
+            this.lbl_playlist_access.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // GUI
             // 
@@ -302,6 +313,7 @@
         private System.Windows.Forms.GroupBox group_debug;
         private System.Windows.Forms.GroupBox group_playlist;
         private System.Windows.Forms.ToolStripMenuItem menu_playlist_refresh;
+        private System.Windows.Forms.Label lbl_playlist_access;
     }
 }
 

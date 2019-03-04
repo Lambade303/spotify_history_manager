@@ -15,10 +15,17 @@ using Windows.Data.Xml.Dom;
 
 namespace SpotifySimpleManager
 {
+    public enum GUIMode
+    {
+        Diff = 0,
+        Load = 1
+    }
+
     public partial class GUI : Form
     {
         private Steuerung dieSteuerung;
         private ReminderUI derReminder;
+        private GUIMode derModus;
         private bool api_init;
 
         public GUI()
@@ -26,6 +33,7 @@ namespace SpotifySimpleManager
             InitializeComponent();
             dieSteuerung = new Steuerung(this);
             derReminder = new ReminderUI(this);
+            derModus = GUIMode.Diff; //Default
         }
 
         public void ShowToast(string Message)
@@ -43,6 +51,24 @@ namespace SpotifySimpleManager
             lbl_internet.Text = success ? "Keine API-Fehler" : "API-Fehler!";
             lbl_internet.ForeColor = success ? Color.DarkGreen : Color.DarkRed;
             api_init = success;
+        }
+
+        public void ChangeMode(GUIMode newMode)
+        {
+            if (newMode == GUIMode.Load)
+            {
+                derModus = newMode;
+                group_playlist.Text = "(LOAD) Playlist-Info";
+                group_playlist.Font = new Font(group_playlist.Font, FontStyle.Italic);
+                lV_tracks.Font = new Font(group_playlist.Font, FontStyle.Italic);
+            }
+            else if (newMode == GUIMode.Diff)
+            {
+                derModus = newMode;
+                group_playlist.Text = "Playlist-Info";
+                group_playlist.Font = new Font(group_playlist.Font, FontStyle.Regular);
+                lV_tracks.Font = new Font(group_playlist.Font, FontStyle.Regular);
+            }
         }
 
         public void Listbox_SetContent(string[] contents, string[] information)
@@ -96,11 +122,12 @@ namespace SpotifySimpleManager
             return v.Index;
         }
 
-        public void SetPlaylistInfo(string playlist_name, string playlist_author, int playlist_songscount)
+        public void SetPlaylistInfo(string playlist_name, string playlist_author, int playlist_songscount, DateTime accessTime)
         {
             lbl_playlist_Name.Text = "Playlist: " + playlist_name;
             lbl_playlist_author.Text = "von: " + playlist_author;
             lbl_playlist_songanz.Text = "Songs#: " + playlist_songscount.ToString();
+            lbl_playlist_access.Text = "Zugriff: " + accessTime.ToLongTimeString();
         }
 
         public void ResetAfterCommit()

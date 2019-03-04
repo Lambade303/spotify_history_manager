@@ -8,30 +8,31 @@ namespace SpotifySimpleManager
 {
     class Commit
     {
-        private string playlist_uri;
+        private string playlist_id;
         private string[] uri_added;
         private int[] uri_removed;
         private string[] uri_old;
         private DateTime _timestamp;
 
-        public Commit(string playlist_uri, string[] uri_added, int[] uri_removed, string[] uri_old)
+        public Commit(string playlist_id, string[] uri_added, int[] uri_removed, string[] uri_old)
         {
-            this.playlist_uri = playlist_uri; //obv.
+            this.playlist_id = playlist_id; //obv.
             this.uri_added = uri_added; //Die hinzugefügten URIs
             this.uri_removed = uri_removed; //Die Indizes der entfernten Songs (uri_alt)
             this.uri_old = uri_old; //Die alte Liste der Songs
             _timestamp = DateTime.Now;
         }
 
-        public Commit(DateTime timestamp, string playlist_uri, string[] uri_added, int[] uri_removed, string[] uri_old)
+        public Commit(DateTime timestamp, string playlist_id, string[] uri_added, int[] uri_removed, string[] uri_old)
         {
-            this.playlist_uri = playlist_uri; //obv.
+            this.playlist_id = playlist_id; //obv.
             this.uri_added = uri_added; //Die hinzugefügten URIs
             this.uri_removed = uri_removed; //Die Indizes der entfernten Songs (uri_alt)
             this.uri_old = uri_old; //Die alte Liste der Songs
             _timestamp = timestamp;
         }
 
+        public string GetPlaylistId() => playlist_id;
         public string[] GetAdded() => uri_added;
         public int[] GetRemoved() => uri_removed;
         public string[] GetOld() => uri_old;
@@ -40,7 +41,7 @@ namespace SpotifySimpleManager
         {
             //I: Header
             string header = "# " + _timestamp.ToShortDateString() + " ~ " + _timestamp.ToShortTimeString() + "\n";
-            header += "# Playlist: " + playlist_uri + "\n";
+            header += "# Playlist: " + playlist_id + "\n";
             string header_indexes; //Hilft beim auslesen eines commits später
             //II: URI ADD
             int idx_add = 6; //Festgelegt

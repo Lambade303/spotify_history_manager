@@ -60,7 +60,7 @@ namespace SpotifySimpleManager
             l303 = api.GetPlaylist("lambade303", "0Yk8TlHuFCGELX2EZHTRZ4"); //Codeb.: 6YiI6sO5TyAtHDYanlKIjM; Lambade: 0Yk8TlHuFCGELX2EZHTRZ4
             l303_tracks = await getTracksAsync();
 
-            dieGUI.SetPlaylistInfo(l303.Name, l303.Owner.DisplayName, l303.Tracks.Total);
+            dieGUI.SetPlaylistInfo(l303.Name, l303.Owner.DisplayName, l303.Tracks.Total, DateTime.Now);
 
             isPlaylistOnGUI = false;
         }
@@ -183,7 +183,7 @@ namespace SpotifySimpleManager
                         dieGUI.Listbox_PaintRemovedSongs(uri_rem);
                         areDiffTracksMarked = true;
                     }
-                    derCommit = new Commit(l303.Uri, uri_add_s, uri_rem, uri_ALT);
+                    derCommit = new Commit(l303.Id, uri_add_s, uri_rem, uri_ALT);
                 }
             }
             return gleich;
@@ -197,6 +197,7 @@ namespace SpotifySimpleManager
                 dieGUI.ResetAfterCommit();
                 areDiffTracksMarked = false;
                 isPlaylistOnGUI = false;
+                dieGUI.ShowMessage("Commit erfolgreich abgespeichert!");
             }
             else
             {
@@ -226,6 +227,15 @@ namespace SpotifySimpleManager
 
             int[] uri_rem = derCommit.GetRemoved();
             dieGUI.Listbox_PaintRemovedSongs(uri_rem);
+
+            //GUI-Modus ändern und Playlist-Infos anzeigen
+            dieGUI.ChangeMode(GUIMode.Load);
+            string id = derCommit.GetPlaylistId();
+            if (id != l303.Id) //Wenn Id nicht gleich bereitws geladener Id ist
+            {
+                FullPlaylist playl = await api.GetPlaylistAsync("lambade303", id);
+                dieGUI.SetPlaylistInfo(playl.Name, playl.Owner.DisplayName, playl.Tracks.Total, DateTime.Now);
+            }
         }
 
         public void InvokeOnFullHour() //Nur Debug
