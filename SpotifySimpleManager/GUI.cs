@@ -51,10 +51,11 @@ namespace SpotifySimpleManager
             ListViewItem[] contents_listview = new ListViewItem[contents.Length];
             for (int i = 0; i < contents_listview.Length; i++)
             {
-                contents_listview[i] = new ListViewItem(contents[i])
+                contents_listview[i] = new ListViewItem(contents[i]);
+                if (information != null)
                 {
-                    ToolTipText = information[i],
-                };
+                    contents_listview[i].ToolTipText = information[i];
+                }
             }
             lV_tracks.Items.AddRange(contents_listview);
         }
@@ -102,6 +103,12 @@ namespace SpotifySimpleManager
             lbl_playlist_songanz.Text = "Songs#: " + playlist_songscount.ToString();
         }
 
+        public void ResetAfterCommit()
+        {
+            lV_tracks.Items.Clear();
+            menu_commit_save.Enabled = false;
+        }
+
         public void ReminderUI_Clicked()
         {
             //GUI Anzeigen, Commit ausführen? vllt mit ReminderUI.Status-Enum Art der Nachricht im ReminderUI übergeben?
@@ -142,8 +149,8 @@ namespace SpotifySimpleManager
                 try
                 {
                     bool success = dieSteuerung.TracksToGUI();
-                    bool gleich = await dieSteuerung.PerformCompare();
-                    menu_commit_save.Enabled = !gleich;
+                    int gleich = await dieSteuerung.PerformCompare();
+                    menu_commit_save.Enabled = (gleich == 0) ? true : false;
                 }
                 catch
                 {

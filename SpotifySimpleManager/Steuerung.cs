@@ -121,19 +121,20 @@ namespace SpotifySimpleManager
             {
                 uris[i] = l303_tracks[i].Track.Uri;
             }
-            dieDaten.SaveURIsToFile(uris, l303.Uri, l303.Name);
+            dieDaten.SaveURIsToFile(uris, l303.Id, l303.Name);
         }
 
         /// <summary>
         /// <para>Startet den Vergleich.</para>
         /// <para>Returns: </para>
-        /// <para>false - Playlist ist Gleich (Unverändert zu letztem Dump)</para>
-        /// <para>true - Playlist ist Verschieden (Verändert zu letztem Dump)</para>
+        /// <para>1 - Playlist ist Gleich (Unverändert zu letztem Dump)</para>
+        /// <para>0 - Playlist ist Verschieden (Verändert zu letztem Dump)</para>
+        /// <para>-1 - Ein Fehler ist aufgetreten.</para>
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> PerformCompare()
+        public async Task<int> PerformCompare()
         {
-            bool gleich = true;
+            int gleich = 1;
             if (!areDiffTracksMarked) //nur ausführen, wenn die Tracks nicht gemarked sind
             {
                 //Spotify URIs schaben
@@ -144,12 +145,15 @@ namespace SpotifySimpleManager
                     uri_NEU[i] = l303_tracks[i].Track.Uri;
                 }
                 // II: Dateiliste laden
-                string[] uri_ALT = dieDaten.GetURIsFromFile(l303.Uri);
+                string[] uri_ALT = dieDaten.GetURIsFromFile(l303.Id);
+
+                if (uri_ALT == null)
+                    return -1;
 
                 // III: CHECKADD (uri_add-Liste) (FROM: NEU, TO: ALT)
                 int[] uri_add = checkDiff(uri_NEU, uri_ALT);
                 if (uri_add.Length > 0)
-                    gleich = false;
+                    gleich = 0;
 
                 string[] uri_add_s = new string[uri_add.Length]; //Für Commit
                 for (int i = 0; i < uri_add_s.Length; i++)
@@ -160,9 +164,9 @@ namespace SpotifySimpleManager
                 //IV: CHECKREM (uri_rem-Liste) (FROM: ALT, TO: NEU)
                 int[] uri_rem = checkDiff(uri_ALT, uri_NEU);
                 if (uri_rem.Length > 0)
-                    gleich = false;
+                    gleich = 0;
 
-                if (!gleich)
+                if (gleich == 0)
                 {
                     //V: Output GUI
                     if (isPlaylistOnGUI)
@@ -190,6 +194,9 @@ namespace SpotifySimpleManager
             if (derCommit != null)
             {
                 dieDaten.PerformCommit(derCommit);
+                dieGUI.ResetAfterCommit();
+                areDiffTracksMarked = false;
+                isPlaylistOnGUI = false;
             }
             else
             {
@@ -230,8 +237,10 @@ namespace SpotifySimpleManager
         {
             //Hier wird der Toast aufgerufen, falls ein Commit nötig ist.
             await RefreshPlaylistDataAsync();
-            bool brauchtUpdate = !await PerformCompare(); //Returned ob die Playlist gleich ist, daher invert
-            if (brauchtUpdate)
+            int playlistIstGleich = await PerformCompare(); //Returned ob die Playlist gleich ist, daher invert
+
+
+            if (playlistIstGleich == 0)
             {
                 dieGUI.ShowToast("Die Playlist " + l303.Name + " ist nicht mehr synchronisiert.\nEin Commit ist nötig!");
             }
