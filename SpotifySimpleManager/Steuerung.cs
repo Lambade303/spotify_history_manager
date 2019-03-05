@@ -231,7 +231,7 @@ namespace SpotifySimpleManager
             //GUI-Modus ändern und Playlist-Infos anzeigen
             dieGUI.ChangeMode(GUIMode.Load);
             string id = derCommit.GetPlaylistId();
-            if (id != l303.Id) //Wenn Id nicht gleich bereitws geladener Id ist
+            if (id != l303.Id) //Wenn Id nicht gleich bereits geladener Id ist
             {
                 FullPlaylist playl = await api.GetPlaylistAsync("lambade303", id);
                 dieGUI.SetPlaylistInfo(playl.Name, playl.Owner.DisplayName, playl.Tracks.Total, DateTime.Now);
