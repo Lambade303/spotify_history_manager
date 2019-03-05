@@ -173,5 +173,8 @@
     <None Include="README.md" />
     <None Include="Resources\spotify_logo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="_Codelayout.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

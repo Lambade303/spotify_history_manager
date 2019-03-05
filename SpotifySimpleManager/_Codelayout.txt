@@ -1,0 +1,52 @@
+﻿//Prolog im Himmel
+	Hier ein Schema, seinen Code für bessere Verwaltung (insb. Bugfixing) zu strukturieren.
+	Bitte dran halten und es konsequent durchziehen.
+	//Inhalt:
+		- Code Layout Anweisungen
+		- Bennenungsregeln für Methoden
+		- Ändern der C#-Version
+
+//Code Layout
+	<USING DIREKTIVEN>
+
+	<NAMESPACE>
+
+		<HAUPTKLASSE> : [<GEERBTE KLASSE> [, <SCHNITTSTELLEN>]]
+		
+			<INTERNE KLASSEN> (z.B. Args-Klassen)
+
+			<DELEGATEN>
+
+			<EVENTS>
+
+			<ASSOZIATIONEN>
+
+			<ATTRIBUTE>
+
+			<EIGENSCHAFTEN>						//Die mit get; set;
+
+			<KONSTRUKTOREN>
+
+			<EVENT-METHODEN> (z.B. "Button-Click"-Methoden)
+
+			[public/protected] <Methoden>
+
+			[private] <(Hilfs-)Methoden>
+
+// Bennenungsregeln
+	
+	Klassen mit großem Anfangsbuchstaben ("Pascal-Schreibweise")
+	Public Methoden mit großem Anfangsbuchstaben ("Pascal-Schreibweise")
+	Private Methoden mit kleinem Anfangsbuchstaben
+
+	//Diese Regeln können optional auch in den Einstellungen von Visual Studio unter
+	// Extras > Optionen > Text-Editor > C# > Codeformat > Benennung
+	// hinzugefügt werden, dann meldet VS einen Verstoß
+
+// C# Version ändern (Kompatibilität mit Schul-Visual Studio)
+	
+	1. Auf Projekt klicken ("KalenderCore")
+	2. Eigenschaften
+	3. Build > Erweitert
+	4. C#-Version 6.0 einstellen
+	fertig.
