@@ -35,6 +35,8 @@ namespace SpotifySimpleManager
 
         public async void InitializeAPIAsync() //Nach GUI-Load aufgerufen
         {
+            dieGUI.ChangeMode(GUIMode.Lock);
+
             //AUTHORIZATION
             CredentialsAuth auth = new CredentialsAuth("a9936dcafc7e4ffbad01ea306fc4b267", "6f103a536bf6432892fc44f9eed19ba2");
             Token t = await auth.GetToken();
@@ -57,12 +59,27 @@ namespace SpotifySimpleManager
 
         public async Task RefreshPlaylistDataAsync()
         {
-            l303 = api.GetPlaylist("lambade303", "0Yk8TlHuFCGELX2EZHTRZ4"); //Codeb.: 6YiI6sO5TyAtHDYanlKIjM; Lambade: 0Yk8TlHuFCGELX2EZHTRZ4
-            l303_tracks = await getTracksAsync();
+            bool fehler;
+            try
+            {
+                l303 = api.GetPlaylist("lambade303", "0Yk8TlHuFCGELX2EZHTRZ4"); //Codeb.: 6YiI6sO5TyAtHDYanlKIjM; Lambade: 0Yk8TlHuFCGELX2EZHTRZ4
+                l303_tracks = await getTracksAsync();
+                fehler = false;
+            }
+            catch (System.Net.Http.HttpRequestException)
+            {
+                dieGUI.ShowMessage("Zuviele Requests. Bitte in ein paar Sekunden erneut versuchen!");
+                fehler = true;
+            }
 
-            dieGUI.SetPlaylistInfo(l303.Name, l303.Owner.DisplayName, l303.Tracks.Total, DateTime.Now);
+            dieGUI.ChangeMode(GUIMode.Diff);
 
-            isPlaylistOnGUI = false;
+            if (fehler == false)
+            {
+                dieGUI.SetPlaylistInfo(l303.Name, l303.Owner.DisplayName, l303.Tracks.Total, DateTime.Now);
+
+                isPlaylistOnGUI = false;
+            }
         }
 
         public void StartPlaylistListener()
@@ -241,6 +258,14 @@ namespace SpotifySimpleManager
         public void InvokeOnFullHour() //Nur Debug
         {
             DerListener_OnFullHour(this, new EventArgs());
+        }
+
+        public void LockGUI(bool locked) //Nur Debug
+        {
+            if (locked)
+                dieGUI.ChangeMode(GUIMode.Lock);
+            else
+                dieGUI.ChangeMode(GUIMode.Diff);
         }
 
         private async void DerListener_OnFullHour(object sender, EventArgs e)

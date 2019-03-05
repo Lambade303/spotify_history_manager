@@ -237,9 +237,9 @@
             // 
             this.group_debug.Controls.Add(this.b_debughour);
             this.group_debug.Controls.Add(this.b_debugdump);
-            this.group_debug.Location = new System.Drawing.Point(298, 382);
+            this.group_debug.Location = new System.Drawing.Point(298, 337);
             this.group_debug.Name = "group_debug";
-            this.group_debug.Size = new System.Drawing.Size(109, 80);
+            this.group_debug.Size = new System.Drawing.Size(109, 125);
             this.group_debug.TabIndex = 13;
             this.group_debug.TabStop = false;
             this.group_debug.Text = "DEBUG";

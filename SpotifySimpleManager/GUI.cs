@@ -18,7 +18,8 @@ namespace SpotifySimpleManager
     public enum GUIMode
     {
         Diff = 0,
-        Load = 1
+        Load = 1,
+        Lock = 2
     }
 
     public partial class GUI : Form
@@ -33,7 +34,8 @@ namespace SpotifySimpleManager
             InitializeComponent();
             dieSteuerung = new Steuerung(this);
             derReminder = new ReminderUI(this);
-            derModus = GUIMode.Diff; //Default
+
+            ChangeMode(GUIMode.Lock); //Default bis Api-Response kommt; Freigabe durch Steuerung
         }
 
         public void ShowToast(string Message)
@@ -55,20 +57,41 @@ namespace SpotifySimpleManager
 
         public void ChangeMode(GUIMode newMode)
         {
-            if (newMode == GUIMode.Load)
+            FontStyle fs;
+
+            switch (newMode)
             {
-                derModus = newMode;
-                group_playlist.Text = "(LOAD) Playlist-Info";
-                group_playlist.Font = new Font(group_playlist.Font, FontStyle.Italic);
-                lV_tracks.Font = new Font(group_playlist.Font, FontStyle.Italic);
+                case GUIMode.Diff:
+                    {
+                        group_playlist.Text = "Playlist-Info";
+                        fs = FontStyle.Regular;
+                        if (derModus == GUIMode.Lock) setGUILock(false);
+                    }
+                    break;
+                case GUIMode.Load:
+                    {
+                        group_playlist.Text = "(LOAD) Playlist-Info";
+                        fs = FontStyle.Italic;
+                        if (derModus == GUIMode.Lock) setGUILock(false);
+                    }
+                    break;
+                case GUIMode.Lock:
+                    {
+                        //Alles sperren
+                        setGUILock(true);
+                        fs = FontStyle.Strikeout;
+                    }
+                    break;
+                default:
+                    fs = FontStyle.Regular;
+                    break;
             }
-            else if (newMode == GUIMode.Diff)
-            {
-                derModus = newMode;
-                group_playlist.Text = "Playlist-Info";
-                group_playlist.Font = new Font(group_playlist.Font, FontStyle.Regular);
-                lV_tracks.Font = new Font(group_playlist.Font, FontStyle.Regular);
-            }
+
+            derModus = newMode;
+
+            group_playlist.Font = new Font(group_playlist.Font, fs);
+            lV_tracks.Font = new Font(lV_tracks.Font, fs);
+
         }
 
         public void Listbox_SetContent(string[] contents, string[] information)
@@ -141,6 +164,13 @@ namespace SpotifySimpleManager
             //GUI Anzeigen, Commit ausführen? vllt mit ReminderUI.Status-Enum Art der Nachricht im ReminderUI übergeben?
         }
 
+        private void setGUILock(bool locked)
+        {
+            menu_main.Enabled = !locked;
+            lV_tracks.Enabled = !locked;
+            group_playlist.Enabled = !locked;
+        }
+
         private void GUI_Load(object sender, EventArgs e)
         {
             dieSteuerung.InitializeAPIAsync();
@@ -202,9 +232,9 @@ namespace SpotifySimpleManager
             dieSteuerung.InvokeOnFullHour();
         }
 
-        private void menu_playlist_refresh_Click(object sender, EventArgs e)
+        private async void menu_playlist_refresh_Click(object sender, EventArgs e)
         {
-            dieSteuerung.RefreshPlaylistDataAsync();
+            await dieSteuerung.RefreshPlaylistDataAsync();
         }
     }
 }
