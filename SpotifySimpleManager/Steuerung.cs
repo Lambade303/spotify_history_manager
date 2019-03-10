@@ -202,6 +202,8 @@ namespace SpotifySimpleManager
                     }
                     derCommit = new Commit(l303.Id, uri_add_s, uri_rem, uri_ALT);
                 }
+
+                dieGUI.UpdateDiffindicator();
             }
             return gleich;
         }
@@ -244,6 +246,8 @@ namespace SpotifySimpleManager
 
             int[] uri_rem = derCommit.GetRemoved();
             dieGUI.Listbox_PaintRemovedSongs(uri_rem);
+
+            dieGUI.UpdateDiffindicator();
 
             //GUI-Modus ändern und Playlist-Infos anzeigen
             dieGUI.ChangeMode(GUIMode.Load);

@@ -8,9 +8,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Toolkit.Uwp.Notifications;
-using Windows.UI.Notifications;
-using Windows.Data.Xml.Dom;
 
 
 namespace SpotifySimpleManager
@@ -28,6 +25,8 @@ namespace SpotifySimpleManager
         private ReminderUI derReminder;
         private GUIMode derModus;
         private bool api_init;
+        private int diff_add_songs;
+        private int diff_rem_songs;
 
         public GUI()
         {
@@ -111,6 +110,8 @@ namespace SpotifySimpleManager
 
         public void Listbox_PaintAddedSongs(params int[] addedSongs)
         {
+            diff_add_songs = addedSongs.Length;
+
             for (int i = 0; i < addedSongs.Length; i++)
             {
                 ListViewItem L = lV_tracks.Items[addedSongs[i]];
@@ -124,6 +125,8 @@ namespace SpotifySimpleManager
 
         public void Listbox_PaintRemovedSongs(params int[] removedSongs)
         {
+            diff_rem_songs = removedSongs.Length;
+
             for (int i = 0; i < removedSongs.Length; i++)
             {
                 ListViewItem L = lV_tracks.Items[removedSongs[i]];
@@ -164,6 +167,40 @@ namespace SpotifySimpleManager
             //GUI Anzeigen, Commit ausführen? vllt mit ReminderUI.Status-Enum Art der Nachricht im ReminderUI übergeben?
         }
 
+        public void UpdateDiffindicator()
+        {
+            string build = "";
+            bool isAdd = diff_add_songs > 0;
+            bool isRem = diff_rem_songs > 0;
+            bool isDiff = isAdd || isRem;
+
+            //inhaltliches
+            if (isAdd)
+            {
+                build += diff_add_songs + " Songs added";
+                if (isRem)
+                {
+                    build += "; ";
+                }
+            }
+            if (isRem)
+            {
+                build += diff_rem_songs + " Songs removed";
+            }
+
+            //Farbliches
+            if (isDiff)
+            {
+                lbl_diffindicator.Text = build;
+                lbl_diffindicator.ForeColor = Color.OrangeRed;
+            }
+            else
+            {
+                lbl_diffindicator.Text = "Keine Veränderung!";
+                lbl_diffindicator.ForeColor = Color.Black;
+            }
+        }
+
         private void setGUILock(bool locked)
         {
             menu_main.Enabled = !locked;
@@ -197,6 +234,8 @@ namespace SpotifySimpleManager
                 string selectedPath = fileDialog_commit.FileName;
                 dieSteuerung.LoadCommit(selectedPath);
             }
+
+            //Anzeigen, wieviel ADD/REM im lbl_diffindicator
         }
 
         private async void menu_playlist_laden_Click(object sender, EventArgs e)

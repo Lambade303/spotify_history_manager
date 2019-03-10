@@ -52,6 +52,7 @@
             this.group_debug = new System.Windows.Forms.GroupBox();
             this.group_playlist = new System.Windows.Forms.GroupBox();
             this.lbl_playlist_access = new System.Windows.Forms.Label();
+            this.lbl_diffindicator = new System.Windows.Forms.Label();
             this.menu_main.SuspendLayout();
             this.group_debug.SuspendLayout();
             this.group_playlist.SuspendLayout();
@@ -266,11 +267,21 @@
             this.lbl_playlist_access.Text = " ";
             this.lbl_playlist_access.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // lbl_diffindicator
+            // 
+            this.lbl_diffindicator.ForeColor = System.Drawing.Color.Black;
+            this.lbl_diffindicator.Location = new System.Drawing.Point(133, 24);
+            this.lbl_diffindicator.Name = "lbl_diffindicator";
+            this.lbl_diffindicator.Size = new System.Drawing.Size(159, 13);
+            this.lbl_diffindicator.TabIndex = 15;
+            this.lbl_diffindicator.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(419, 474);
+            this.Controls.Add(this.lbl_diffindicator);
             this.Controls.Add(this.group_playlist);
             this.Controls.Add(this.group_debug);
             this.Controls.Add(this.lV_tracks);
@@ -314,6 +325,7 @@
         private System.Windows.Forms.GroupBox group_playlist;
         private System.Windows.Forms.ToolStripMenuItem menu_playlist_refresh;
         private System.Windows.Forms.Label lbl_playlist_access;
+        private System.Windows.Forms.Label lbl_diffindicator;
     }
 }
 
