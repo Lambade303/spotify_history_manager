@@ -44,7 +44,7 @@ namespace SpotifySimpleManager
 
         public void ShowMessage(string Message)
         {
-            MessageBox.Show(Message, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, Message, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void SetInitSuccess(bool success)
@@ -177,7 +177,7 @@ namespace SpotifySimpleManager
             //inhaltliches
             if (isAdd)
             {
-                build += diff_add_songs + " Songs added";
+                build += diff_add_songs + " ADD";
                 if (isRem)
                 {
                     build += "; ";
@@ -185,7 +185,7 @@ namespace SpotifySimpleManager
             }
             if (isRem)
             {
-                build += diff_rem_songs + " Songs removed";
+                build += diff_rem_songs + " REM";
             }
 
             //Farbliches

@@ -7,6 +7,7 @@ using SpotifyAPI;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Auth;
 using SpotifyAPI.Web.Models;
+using Newtonsoft.Json;
 
 namespace SpotifySimpleManager
 {
@@ -37,7 +38,8 @@ namespace SpotifySimpleManager
         {
             dieGUI.ChangeMode(GUIMode.Lock);
 
-            //AUTHORIZATION
+            //AUTHORIZATION~
+            //Todo: Credentials von config.json parsen
             CredentialsAuth auth = new CredentialsAuth("a9936dcafc7e4ffbad01ea306fc4b267", "6f103a536bf6432892fc44f9eed19ba2");
             Token t = await auth.GetToken();
 
