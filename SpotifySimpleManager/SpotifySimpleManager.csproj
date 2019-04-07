@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commit.cs" />
+    <Compile Include="ConfigJson.cs" />
     <Compile Include="Daten.cs" />
     <Compile Include="GUI.cs">
       <SubType>Form</SubType>
@@ -184,7 +185,9 @@
     <None Include="Resources\spotify_logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="conf.json" />
+    <None Include="conf.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="_Codelayout.txt" />
   </ItemGroup>
   <ItemGroup>

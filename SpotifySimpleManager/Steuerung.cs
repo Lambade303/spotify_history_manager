@@ -17,12 +17,14 @@ namespace SpotifySimpleManager
         Daten dieDaten;
         Commit derCommit;
         Listener derListener;
+        ConfigJson dieConfig;
 
         SpotifyWebAPI api;
         FullPlaylist l303;
         List<PlaylistTrack> l303_tracks;
 
 
+        private string configFilepath = "./conf.json"; //Bei Debug conf.json ins Ausgabeverzeichnis kopieren lassen!
         bool areDiffTracksMarked;
         bool isPlaylistOnGUI;
 
@@ -32,15 +34,19 @@ namespace SpotifySimpleManager
             dieDaten = new Daten();
             derListener = new Listener();
             derListener.OnFullHour += DerListener_OnFullHour;
+
+            dieConfig = ConfigJson.DeserializeFile("./conf.json");
         }
 
         public async void InitializeAPIAsync() //Nach GUI-Load aufgerufen
         {
             dieGUI.ChangeMode(GUIMode.Lock);
 
-            //AUTHORIZATION~
-            //Todo: Credentials von config.json parsen
-            CredentialsAuth auth = new CredentialsAuth("a9936dcafc7e4ffbad01ea306fc4b267", "6f103a536bf6432892fc44f9eed19ba2");
+            //AUTHORIZATION
+            string id = dieConfig.ClientId;
+            string secret = dieConfig.ClientSecret;
+
+            CredentialsAuth auth = new CredentialsAuth(id, secret);
             Token t = await auth.GetToken();
 
             //Erroranzeige-GUI
