@@ -260,4 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /_BACKUP
-./SpotifySimpleManager/conf.json
+SpotifySimpleManager/conf.json
