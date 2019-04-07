@@ -33,8 +33,6 @@ namespace SpotifySimpleManager
             InitializeComponent();
             dieSteuerung = new Steuerung(this);
             derReminder = new ReminderUI(this);
-
-            ChangeMode(GUIMode.Lock); //Default bis Api-Response kommt; Freigabe durch Steuerung
         }
 
         public void ShowToast(string Message)

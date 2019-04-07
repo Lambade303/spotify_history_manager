@@ -70,9 +70,10 @@ namespace SpotifySimpleManager
             bool fehler;
             string userid = dieConfig.Username;
             string playlistid = dieConfig.Playlist;
+
             try
             {
-                l303 = api.GetPlaylist("lambade303", "0Yk8TlHuFCGELX2EZHTRZ4"); //Codeb.: 6YiI6sO5TyAtHDYanlKIjM; Lambade: 0Yk8TlHuFCGELX2EZHTRZ4
+                l303 = api.GetPlaylist(userid, playlistid);//Codeb.: 6YiI6sO5TyAtHDYanlKIjM; Lambade: 0Yk8TlHuFCGELX2EZHTRZ4
                 l303_tracks = await getTracksAsync();
                 fehler = false;
             }
