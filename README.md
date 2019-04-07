@@ -7,5 +7,5 @@ Notiz für Freigabe:
 
 Used Libraries:
 
-<a href="https://github.com/JohnnyCrazy/SpotifyAPI-NET">SpotifyAPI-NET</a>
+<a href="https://github.com/JohnnyCrazy/SpotifyAPI-NET">SpotifyAPI-NET</a><br/>
 <a href="https://github.com/JamesNK/Newtonsoft.Json">Newtonsoft-JSON</a>
