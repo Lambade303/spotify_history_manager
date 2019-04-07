@@ -184,6 +184,7 @@
     <None Include="Resources\spotify_logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="conf.json" />
     <Content Include="_Codelayout.txt" />
   </ItemGroup>
   <ItemGroup>
