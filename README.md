@@ -4,3 +4,8 @@ An application inspired by git, where I press a button to create a new "commit",
 Notiz für Freigabe:
   Die Spotify API benötigt eine Authentifizierung per Client-Secret (siehe Steuerung.InitializeAPIAsync() bei auth)
   Da dies irgendwas persönliches bei Spotify ist bitte ich um keine Verbreitung dieses Schlüssels. Vielleicht gibts bald eine Alternative, bis dahin ist der Key tabu.
+
+Used Libraries:
+
+<a href="https://github.com/JohnnyCrazy/SpotifyAPI-NET">SpotifyAPI-NET</a>
+<a href="https://github.com/JamesNK/Newtonsoft.Json">Newtonsoft-JSON</a>
