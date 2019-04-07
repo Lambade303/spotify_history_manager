@@ -35,7 +35,7 @@ namespace SpotifySimpleManager
             derListener = new Listener();
             derListener.OnFullHour += DerListener_OnFullHour;
 
-            dieConfig = ConfigJson.DeserializeFile("./conf.json");
+            dieConfig = ConfigJson.DeserializeFile(configFilepath);
         }
 
         public async void InitializeAPIAsync() //Nach GUI-Load aufgerufen
@@ -68,6 +68,8 @@ namespace SpotifySimpleManager
         public async Task RefreshPlaylistDataAsync()
         {
             bool fehler;
+            string userid = dieConfig.Username;
+            string playlistid = dieConfig.Playlist;
             try
             {
                 l303 = api.GetPlaylist("lambade303", "0Yk8TlHuFCGELX2EZHTRZ4"); //Codeb.: 6YiI6sO5TyAtHDYanlKIjM; Lambade: 0Yk8TlHuFCGELX2EZHTRZ4

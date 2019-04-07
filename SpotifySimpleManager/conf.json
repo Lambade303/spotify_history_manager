@@ -1,8 +1,8 @@
 ﻿{
-  "Username": "yourUsername"
+  "Username": "yourUsername",
   "ClientId": "yourClientId",
   "ClientSecret": "yourClientSecret",
 
-  "Playlist": "yourPlaylistURI"
+  "Playlist": "yourPlaylist_id" //Example: "0Yk8TlHuFCGELX2EZHTRZ4"
 
 }
