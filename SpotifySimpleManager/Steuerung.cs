@@ -17,8 +17,9 @@ namespace SpotifySimpleManager
         Daten dieDaten;
         Commit derCommit;
         Listener derListener;
-        ConfigJson dieConfig;
+        OptionsUI dieOptions;
 
+        Options _opt;
         SpotifyWebAPI api;
         FullPlaylist l303;
         List<PlaylistTrack> l303_tracks;
@@ -33,20 +34,22 @@ namespace SpotifySimpleManager
             dieGUI = pGUI;
             dieDaten = new Daten();
             derListener = new Listener();
+            dieOptions = new OptionsUI();
             derListener.OnFullHour += DerListener_OnFullHour;
 
-            dieConfig = ConfigJson.DeserializeFile(configFilepath);
+            ConfigJson json = ConfigJson.DeserializeFile(configFilepath);
+            _opt = new Options(json, configFilepath);
         }
 
         public async void InitializeAPIAsync() //Nach GUI-Load aufgerufen
         {
-            dieGUI.ChangeMode(GUIMode.Lock);
+            //dieGUI.ChangeMode(GUIMode.Lock);
 
             //AUTHORIZATION
-            string id = dieConfig.ClientId;
-            string secret = dieConfig.ClientSecret;
+            string id = _opt.ClientId;
+            string secret = _opt.ClientSecret;
 
-            CredentialsAuth auth = new CredentialsAuth(id, secret);
+            CredentialsAuth auth = new CredentialsAuth("a9936dcafc7e4ffbad01ea306fc4b267", "6f103a536bf6432892fc44f9eed19ba2");
             Token t = await auth.GetToken();
 
             //Erroranzeige-GUI
@@ -68,8 +71,8 @@ namespace SpotifySimpleManager
         public async Task RefreshPlaylistDataAsync()
         {
             bool fehler;
-            string userid = dieConfig.Username;
-            string playlistid = dieConfig.Playlist;
+            string userid = _opt.Username;
+            string playlistid = _opt.Playlist;
 
             try
             {
@@ -281,6 +284,16 @@ namespace SpotifySimpleManager
                 dieGUI.ChangeMode(GUIMode.Lock);
             else
                 dieGUI.ChangeMode(GUIMode.Diff);
+        }
+
+        public void ShowOptionsDialog()
+        {
+            dieOptions.LoadOptions(_opt);
+            System.Windows.Forms.DialogResult d = dieOptions.ShowDialog();
+            if (d == System.Windows.Forms.DialogResult.OK)
+            {
+                _opt = dieOptions.GetOptionsData();
+            }
         }
 
         private async void DerListener_OnFullHour(object sender, EventArgs e)

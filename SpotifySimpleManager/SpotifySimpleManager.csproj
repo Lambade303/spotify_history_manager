@@ -140,6 +140,13 @@
       <DependentUpon>GUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Listener.cs" />
+    <Compile Include="Options.cs" />
+    <Compile Include="OptionsUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OptionsUI.Designer.cs">
+      <DependentUpon>OptionsUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReminderUI.cs">
@@ -151,6 +158,9 @@
     <Compile Include="Steuerung.cs" />
     <EmbeddedResource Include="GUI.resx">
       <DependentUpon>GUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OptionsUI.resx">
+      <DependentUpon>OptionsUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

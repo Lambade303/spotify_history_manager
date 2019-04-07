@@ -44,6 +44,8 @@
             this.menu_listener = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_listener_starten = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_listener_stoppen = new System.Windows.Forms.ToolStripMenuItem();
+            this.menu_extras = new System.Windows.Forms.ToolStripMenuItem();
+            this.menu_extras_optionen = new System.Windows.Forms.ToolStripMenuItem();
             this.fileDialog_commit = new System.Windows.Forms.OpenFileDialog();
             this.b_debughour = new System.Windows.Forms.Button();
             this.lbl_playlist_Name = new System.Windows.Forms.Label();
@@ -53,6 +55,7 @@
             this.group_playlist = new System.Windows.Forms.GroupBox();
             this.lbl_playlist_access = new System.Windows.Forms.Label();
             this.lbl_diffindicator = new System.Windows.Forms.Label();
+            this.b_debug_initapi = new System.Windows.Forms.Button();
             this.menu_main.SuspendLayout();
             this.group_debug.SuspendLayout();
             this.group_playlist.SuspendLayout();
@@ -108,7 +111,8 @@
             this.menu_main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menu_commit,
             this.menu_playlist,
-            this.menu_listener});
+            this.menu_listener,
+            this.menu_extras});
             this.menu_main.Location = new System.Drawing.Point(0, 0);
             this.menu_main.Name = "menu_main";
             this.menu_main.Size = new System.Drawing.Size(419, 24);
@@ -191,6 +195,21 @@
             this.menu_listener_stoppen.Text = "Listener Stoppen";
             this.menu_listener_stoppen.Click += new System.EventHandler(this.menu_listener_stoppen_Click);
             // 
+            // menu_extras
+            // 
+            this.menu_extras.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menu_extras_optionen});
+            this.menu_extras.Name = "menu_extras";
+            this.menu_extras.Size = new System.Drawing.Size(49, 20);
+            this.menu_extras.Text = "Extras";
+            // 
+            // menu_extras_optionen
+            // 
+            this.menu_extras_optionen.Name = "menu_extras_optionen";
+            this.menu_extras_optionen.Size = new System.Drawing.Size(124, 22);
+            this.menu_extras_optionen.Text = "Optionen";
+            this.menu_extras_optionen.Click += new System.EventHandler(this.menu_extras_optionen_Click);
+            // 
             // fileDialog_commit
             // 
             this.fileDialog_commit.DefaultExt = "shm";
@@ -236,6 +255,7 @@
             // 
             // group_debug
             // 
+            this.group_debug.Controls.Add(this.b_debug_initapi);
             this.group_debug.Controls.Add(this.b_debughour);
             this.group_debug.Controls.Add(this.b_debugdump);
             this.group_debug.Location = new System.Drawing.Point(298, 337);
@@ -275,6 +295,16 @@
             this.lbl_diffindicator.Size = new System.Drawing.Size(159, 13);
             this.lbl_diffindicator.TabIndex = 15;
             this.lbl_diffindicator.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // b_debug_initapi
+            // 
+            this.b_debug_initapi.Location = new System.Drawing.Point(6, 77);
+            this.b_debug_initapi.Name = "b_debug_initapi";
+            this.b_debug_initapi.Size = new System.Drawing.Size(93, 23);
+            this.b_debug_initapi.TabIndex = 10;
+            this.b_debug_initapi.Text = "INITAPI";
+            this.b_debug_initapi.UseVisualStyleBackColor = true;
+            this.b_debug_initapi.Click += new System.EventHandler(this.b_debug_initapi_Click);
             // 
             // GUI
             // 
@@ -326,6 +356,9 @@
         private System.Windows.Forms.ToolStripMenuItem menu_playlist_refresh;
         private System.Windows.Forms.Label lbl_playlist_access;
         private System.Windows.Forms.Label lbl_diffindicator;
+        private System.Windows.Forms.ToolStripMenuItem menu_extras;
+        private System.Windows.Forms.ToolStripMenuItem menu_extras_optionen;
+        private System.Windows.Forms.Button b_debug_initapi;
     }
 }
 

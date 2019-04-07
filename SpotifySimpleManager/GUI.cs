@@ -273,5 +273,15 @@ namespace SpotifySimpleManager
         {
             await dieSteuerung.RefreshPlaylistDataAsync();
         }
+
+        private void menu_extras_optionen_Click(object sender, EventArgs e)
+        {
+            dieSteuerung.ShowOptionsDialog();
+        }
+
+        private void b_debug_initapi_Click(object sender, EventArgs e)
+        {
+            dieSteuerung.InitializeAPIAsync();
+        }
     }
 }

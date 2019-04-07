@@ -27,11 +27,11 @@
 
 			<KONSTRUKTOREN>
 
-			<EVENT-METHODEN> (z.B. "Button-Click"-Methoden)
-
 			[public/protected] <Methoden>
 
 			[private] <(Hilfs-)Methoden>
+
+			[private] Event-Methoden
 
 // Bennenungsregeln
 	
