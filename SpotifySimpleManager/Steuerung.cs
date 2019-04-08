@@ -37,8 +37,10 @@ namespace SpotifySimpleManager
             dieOptions = new OptionsUI();
             derListener.OnFullHour += DerListener_OnFullHour;
 
+            string commitspeicher = dieDaten.Speicherort;
+
             ConfigJson json = ConfigJson.DeserializeFile(configFilepath);
-            _opt = new Options(json, configFilepath);
+            _opt = new Options(json, configFilepath, commitspeicher);
         }
 
         public async void InitializeAPIAsync() //Nach GUI-Load aufgerufen
@@ -49,23 +51,27 @@ namespace SpotifySimpleManager
             string id = _opt.ClientId;
             string secret = _opt.ClientSecret;
 
-            CredentialsAuth auth = new CredentialsAuth("a9936dcafc7e4ffbad01ea306fc4b267", "6f103a536bf6432892fc44f9eed19ba2");
-            Token t = await auth.GetToken();
-
-            //Erroranzeige-GUI
+            try
             {
+                CredentialsAuth auth = new CredentialsAuth("a9936dcafc7e4ffbad01ea306fc4b267", "6f103a536bf6432892fc44f9eed19ba2");
+                Token t = await auth.GetToken();
                 bool fehler = t.HasError();
                 dieGUI.SetInitSuccess(!fehler);
+
+                api = new SpotifyWebAPI()
+                {
+                    AccessToken = t.AccessToken,
+                    TokenType = t.TokenType,
+                };
+
+                //Lambade303 laden:
+                await RefreshPlaylistDataAsync();
             }
-
-            api = new SpotifyWebAPI()
+            catch //Keine Verbindung
             {
-                AccessToken = t.AccessToken,
-                TokenType = t.TokenType,
-            };
-
-            //Lambade303 laden:
-            await RefreshPlaylistDataAsync();
+                dieGUI.ShowMessage("Error bei der Verbindung zum Spotify-Server.");
+                //Neue GUI-Mode: BrokenDiff (Wenn die Playlist aufgrund Internetprobleme nicht geladen werden kann und trotzdem neu versucht werden soll)
+            }
         }
 
         public async Task RefreshPlaylistDataAsync()
@@ -73,17 +79,20 @@ namespace SpotifySimpleManager
             bool fehler;
             string userid = _opt.Username;
             string playlistid = _opt.Playlist;
+            dieGUI.ShowLoadingIcon(true);
 
             try
             {
                 l303 = api.GetPlaylist(userid, playlistid);//Codeb.: 6YiI6sO5TyAtHDYanlKIjM; Lambade: 0Yk8TlHuFCGELX2EZHTRZ4
                 l303_tracks = await getTracksAsync();
                 fehler = false;
+                dieGUI.ShowLoadingIcon(false);
             }
-            catch (System.Net.Http.HttpRequestException)
+            catch //Bei Fehler
             {
                 dieGUI.ShowMessage("Zuviele Requests. Bitte in ein paar Sekunden erneut versuchen!");
                 fehler = true;
+                dieGUI.ShowLoadingIcon(false);
             }
 
             dieGUI.ChangeMode(GUIMode.Diff);

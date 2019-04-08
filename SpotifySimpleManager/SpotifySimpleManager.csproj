@@ -198,6 +198,8 @@
     <None Include="conf.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Resources\loading.gif" />
+    <Content Include="Resources\shm.ico" />
     <Content Include="_Codelayout.txt" />
   </ItemGroup>
   <ItemGroup>

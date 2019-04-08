@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GUI));
             this.lbl_internet = new System.Windows.Forms.Label();
             this.b_debugdump = new System.Windows.Forms.Button();
             this.lV_tracks = new System.Windows.Forms.ListView();
@@ -52,13 +54,16 @@
             this.lbl_playlist_author = new System.Windows.Forms.Label();
             this.lbl_playlist_songanz = new System.Windows.Forms.Label();
             this.group_debug = new System.Windows.Forms.GroupBox();
+            this.b_debug_initapi = new System.Windows.Forms.Button();
             this.group_playlist = new System.Windows.Forms.GroupBox();
             this.lbl_playlist_access = new System.Windows.Forms.Label();
             this.lbl_diffindicator = new System.Windows.Forms.Label();
-            this.b_debug_initapi = new System.Windows.Forms.Button();
+            this.pB_api_loading = new System.Windows.Forms.PictureBox();
+            this._infoIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.menu_main.SuspendLayout();
             this.group_debug.SuspendLayout();
             this.group_playlist.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pB_api_loading)).BeginInit();
             this.SuspendLayout();
             // 
             // lbl_internet
@@ -77,7 +82,7 @@
             this.b_debugdump.Name = "b_debugdump";
             this.b_debugdump.Size = new System.Drawing.Size(93, 23);
             this.b_debugdump.TabIndex = 5;
-            this.b_debugdump.Text = "DEBUGDUMP";
+            this.b_debugdump.Text = "Liste Dumpen";
             this.b_debugdump.UseVisualStyleBackColor = true;
             this.b_debugdump.Click += new System.EventHandler(this.b_debugdump_Click);
             // 
@@ -206,7 +211,7 @@
             // menu_extras_optionen
             // 
             this.menu_extras_optionen.Name = "menu_extras_optionen";
-            this.menu_extras_optionen.Size = new System.Drawing.Size(124, 22);
+            this.menu_extras_optionen.Size = new System.Drawing.Size(180, 22);
             this.menu_extras_optionen.Text = "Optionen";
             this.menu_extras_optionen.Click += new System.EventHandler(this.menu_extras_optionen_Click);
             // 
@@ -265,6 +270,16 @@
             this.group_debug.TabStop = false;
             this.group_debug.Text = "DEBUG";
             // 
+            // b_debug_initapi
+            // 
+            this.b_debug_initapi.Location = new System.Drawing.Point(6, 77);
+            this.b_debug_initapi.Name = "b_debug_initapi";
+            this.b_debug_initapi.Size = new System.Drawing.Size(93, 23);
+            this.b_debug_initapi.TabIndex = 10;
+            this.b_debug_initapi.Text = "INITAPI";
+            this.b_debug_initapi.UseVisualStyleBackColor = true;
+            this.b_debug_initapi.Click += new System.EventHandler(this.b_debug_initapi_Click);
+            // 
             // group_playlist
             // 
             this.group_playlist.Controls.Add(this.lbl_playlist_access);
@@ -296,28 +311,43 @@
             this.lbl_diffindicator.TabIndex = 15;
             this.lbl_diffindicator.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // b_debug_initapi
+            // pB_api_loading
             // 
-            this.b_debug_initapi.Location = new System.Drawing.Point(6, 77);
-            this.b_debug_initapi.Name = "b_debug_initapi";
-            this.b_debug_initapi.Size = new System.Drawing.Size(93, 23);
-            this.b_debug_initapi.TabIndex = 10;
-            this.b_debug_initapi.Text = "INITAPI";
-            this.b_debug_initapi.UseVisualStyleBackColor = true;
-            this.b_debug_initapi.Click += new System.EventHandler(this.b_debug_initapi_Click);
+            this.pB_api_loading.Image = global::SpotifySimpleManager.Properties.Resources.loading;
+            this.pB_api_loading.Location = new System.Drawing.Point(111, 21);
+            this.pB_api_loading.Name = "pB_api_loading";
+            this.pB_api_loading.Size = new System.Drawing.Size(16, 16);
+            this.pB_api_loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pB_api_loading.TabIndex = 16;
+            this.pB_api_loading.TabStop = false;
+            // 
+            // _infoIcon
+            // 
+            this._infoIcon.Text = "Spotify History Manager";
+            this._infoIcon.Visible = true;
+            this._infoIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this._infoIcon_MouseDoubleClick);
             // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(419, 474);
+            this.Controls.Add(this.pB_api_loading);
             this.Controls.Add(this.lbl_diffindicator);
             this.Controls.Add(this.group_playlist);
             this.Controls.Add(this.group_debug);
             this.Controls.Add(this.lV_tracks);
             this.Controls.Add(this.lbl_internet);
             this.Controls.Add(this.menu_main);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menu_main;
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(435, 513);
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(435, 513);
             this.Name = "GUI";
             this.Text = "Spotify History";
             this.Load += new System.EventHandler(this.GUI_Load);
@@ -325,6 +355,7 @@
             this.menu_main.PerformLayout();
             this.group_debug.ResumeLayout(false);
             this.group_playlist.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pB_api_loading)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -359,6 +390,8 @@
         private System.Windows.Forms.ToolStripMenuItem menu_extras;
         private System.Windows.Forms.ToolStripMenuItem menu_extras_optionen;
         private System.Windows.Forms.Button b_debug_initapi;
+        private System.Windows.Forms.PictureBox pB_api_loading;
+        private System.Windows.Forms.NotifyIcon _infoIcon;
     }
 }
 

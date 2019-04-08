@@ -9,12 +9,12 @@ namespace SpotifySimpleManager
 {
     class Daten
     {
-        private string savepath;
+        public string Speicherort { get; set; }
 
         public Daten()
         {
             //Standard-Savefile
-            savepath = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Documents\\SpotifyHistory\\";
+            Speicherort = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Documents\\SpotifyHistory\\";
             createDirectory();
         }
 
@@ -100,7 +100,7 @@ namespace SpotifySimpleManager
             string jetztZeit = DateTime.Now.ToString("hh_mm");
             string filename = jetztDate + "_" + jetztZeit + ".shm";
 
-            StreamWriter w = File.CreateText(savepath + filename);
+            StreamWriter w = File.CreateText(Speicherort + filename);
 
             string header = "# " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString();
             string playlistinfo = "# " + playlist_uri;
@@ -127,7 +127,7 @@ namespace SpotifySimpleManager
             string jetztZeit = DateTime.Now.ToString("hh_mm");
             string filename = "c_" + jetztDate + "_" + jetztZeit + ".shm";
 
-            StreamWriter w = File.CreateText(savepath + filename);
+            StreamWriter w = File.CreateText(Speicherort + filename);
             string paket = c.GetKomplettpaket();
             w.Write(paket);
             w.Close();
@@ -135,13 +135,13 @@ namespace SpotifySimpleManager
 
         private string getLatestPathName(string playlist_uri)
         {
-            string[] files = Directory.GetFileSystemEntries(savepath);
+            string[] files = Directory.GetFileSystemEntries(Speicherort);
             string[] files_names = new string[files.Length];
             string latest_file = null;
 
             for (int i = 0; i < files.Length; i++)
             {
-                files_names[i] = files[i].Substring(savepath.Length);
+                files_names[i] = files[i].Substring(Speicherort.Length);
             }
 
             if (files.Length > 0)
@@ -179,10 +179,10 @@ namespace SpotifySimpleManager
         private void createDirectory()
         {
             //Nächstes Savefile parsen
-            bool dirExist = Directory.Exists(savepath);
+            bool dirExist = Directory.Exists(Speicherort);
             if (!dirExist)
             {
-                Directory.CreateDirectory(savepath);
+                Directory.CreateDirectory(Speicherort);
             }
         }
     }

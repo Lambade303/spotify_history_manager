@@ -41,7 +41,12 @@
             this.tB_configfile = new System.Windows.Forms.TextBox();
             this.b_configfile_change = new System.Windows.Forms.Button();
             this.b_save = new System.Windows.Forms.Button();
-            this.fileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.fileDialog_confjson = new System.Windows.Forms.OpenFileDialog();
+            this.lbl_speicherort = new System.Windows.Forms.Label();
+            this.tB_speicherort = new System.Windows.Forms.TextBox();
+            this.b_unlock = new System.Windows.Forms.Button();
+            this.b_commitspeicher_change = new System.Windows.Forms.Button();
+            this.fileDialog_commitspeicher = new System.Windows.Forms.OpenFileDialog();
             this.group_confjson.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,7 +60,7 @@
             this.group_confjson.Controls.Add(this.lbl_confjson_clientsecret);
             this.group_confjson.Controls.Add(this.lbl_confjson_clientid);
             this.group_confjson.Controls.Add(this.lbl_confjson);
-            this.group_confjson.Location = new System.Drawing.Point(12, 37);
+            this.group_confjson.Location = new System.Drawing.Point(15, 59);
             this.group_confjson.Name = "group_confjson";
             this.group_confjson.Size = new System.Drawing.Size(324, 146);
             this.group_confjson.TabIndex = 0;
@@ -132,7 +137,7 @@
             // 
             // lbl_configfile
             // 
-            this.lbl_configfile.Location = new System.Drawing.Point(9, 9);
+            this.lbl_configfile.Location = new System.Drawing.Point(12, 33);
             this.lbl_configfile.Name = "lbl_configfile";
             this.lbl_configfile.Size = new System.Drawing.Size(55, 23);
             this.lbl_configfile.TabIndex = 1;
@@ -141,16 +146,16 @@
             // 
             // tB_configfile
             // 
-            this.tB_configfile.Location = new System.Drawing.Point(70, 11);
+            this.tB_configfile.Location = new System.Drawing.Point(83, 35);
             this.tB_configfile.Name = "tB_configfile";
             this.tB_configfile.ReadOnly = true;
-            this.tB_configfile.Size = new System.Drawing.Size(223, 20);
+            this.tB_configfile.Size = new System.Drawing.Size(213, 20);
             this.tB_configfile.TabIndex = 2;
             // 
             // b_configfile_change
             // 
             this.b_configfile_change.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.b_configfile_change.Location = new System.Drawing.Point(299, 9);
+            this.b_configfile_change.Location = new System.Drawing.Point(302, 33);
             this.b_configfile_change.Name = "b_configfile_change";
             this.b_configfile_change.Size = new System.Drawing.Size(37, 23);
             this.b_configfile_change.TabIndex = 3;
@@ -160,25 +165,71 @@
             // 
             // b_save
             // 
-            this.b_save.Location = new System.Drawing.Point(261, 189);
+            this.b_save.Location = new System.Drawing.Point(244, 211);
             this.b_save.Name = "b_save";
-            this.b_save.Size = new System.Drawing.Size(75, 23);
+            this.b_save.Size = new System.Drawing.Size(95, 23);
             this.b_save.TabIndex = 4;
             this.b_save.Text = "Speichern";
             this.b_save.UseVisualStyleBackColor = true;
             this.b_save.Click += new System.EventHandler(this.b_save_Click);
             // 
-            // fileDialog
+            // fileDialog_confjson
             // 
-            this.fileDialog.FileName = "conf.json";
-            this.fileDialog.InitialDirectory = ".";
+            this.fileDialog_confjson.FileName = "conf.json";
+            this.fileDialog_confjson.InitialDirectory = ".";
+            // 
+            // lbl_speicherort
+            // 
+            this.lbl_speicherort.Location = new System.Drawing.Point(12, 9);
+            this.lbl_speicherort.Name = "lbl_speicherort";
+            this.lbl_speicherort.Size = new System.Drawing.Size(65, 23);
+            this.lbl_speicherort.TabIndex = 5;
+            this.lbl_speicherort.Text = "Speicherort:";
+            this.lbl_speicherort.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tB_speicherort
+            // 
+            this.tB_speicherort.Location = new System.Drawing.Point(83, 7);
+            this.tB_speicherort.Name = "tB_speicherort";
+            this.tB_speicherort.ReadOnly = true;
+            this.tB_speicherort.Size = new System.Drawing.Size(213, 20);
+            this.tB_speicherort.TabIndex = 8;
+            // 
+            // b_unlock
+            // 
+            this.b_unlock.Location = new System.Drawing.Point(15, 211);
+            this.b_unlock.Name = "b_unlock";
+            this.b_unlock.Size = new System.Drawing.Size(157, 23);
+            this.b_unlock.TabIndex = 9;
+            this.b_unlock.Text = "Entsperren (!)";
+            this.b_unlock.UseVisualStyleBackColor = true;
+            this.b_unlock.Click += new System.EventHandler(this.b_unlock_Click);
+            // 
+            // b_commitspeicher_change
+            // 
+            this.b_commitspeicher_change.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.b_commitspeicher_change.Location = new System.Drawing.Point(302, 5);
+            this.b_commitspeicher_change.Name = "b_commitspeicher_change";
+            this.b_commitspeicher_change.Size = new System.Drawing.Size(37, 23);
+            this.b_commitspeicher_change.TabIndex = 10;
+            this.b_commitspeicher_change.Text = ". . .";
+            this.b_commitspeicher_change.UseVisualStyleBackColor = true;
+            this.b_commitspeicher_change.Click += new System.EventHandler(this.b_commitspeicher_change_Click);
+            // 
+            // fileDialog_commitspeicher
+            // 
+            this.fileDialog_commitspeicher.InitialDirectory = ".";
             // 
             // OptionsUI
             // 
             this.AcceptButton = this.b_save;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(348, 225);
+            this.ClientSize = new System.Drawing.Size(348, 285);
+            this.Controls.Add(this.b_commitspeicher_change);
+            this.Controls.Add(this.b_unlock);
+            this.Controls.Add(this.tB_speicherort);
+            this.Controls.Add(this.lbl_speicherort);
             this.Controls.Add(this.b_save);
             this.Controls.Add(this.b_configfile_change);
             this.Controls.Add(this.tB_configfile);
@@ -211,6 +262,11 @@
         private System.Windows.Forms.TextBox tB_confjson_playlistid;
         private System.Windows.Forms.TextBox tB_confjson_username;
         private System.Windows.Forms.Button b_save;
-        private System.Windows.Forms.OpenFileDialog fileDialog;
+        private System.Windows.Forms.OpenFileDialog fileDialog_confjson;
+        private System.Windows.Forms.Label lbl_speicherort;
+        private System.Windows.Forms.TextBox tB_speicherort;
+        private System.Windows.Forms.Button b_unlock;
+        private System.Windows.Forms.Button b_commitspeicher_change;
+        private System.Windows.Forms.OpenFileDialog fileDialog_commitspeicher;
     }
 }

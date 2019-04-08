@@ -49,6 +49,7 @@ namespace SpotifySimpleManager
         {
             lbl_internet.Text = success ? "Keine API-Fehler" : "API-Fehler!";
             lbl_internet.ForeColor = success ? Color.DarkGreen : Color.DarkRed;
+            ShowLoadingIcon(!success);
             api_init = success;
         }
 
@@ -157,6 +158,7 @@ namespace SpotifySimpleManager
         public void ResetAfterCommit()
         {
             lV_tracks.Items.Clear();
+            lbl_diffindicator.Text = "";
             menu_commit_save.Enabled = false;
         }
 
@@ -199,6 +201,11 @@ namespace SpotifySimpleManager
             }
         }
 
+        public void ShowLoadingIcon(bool show)
+        {
+            pB_api_loading.Visible = show;
+        }
+
         private void setGUILock(bool locked)
         {
             menu_main.Enabled = !locked;
@@ -232,8 +239,6 @@ namespace SpotifySimpleManager
                 string selectedPath = fileDialog_commit.FileName;
                 dieSteuerung.LoadCommit(selectedPath);
             }
-
-            //Anzeigen, wieviel ADD/REM im lbl_diffindicator
         }
 
         private async void menu_playlist_laden_Click(object sender, EventArgs e)
@@ -282,6 +287,11 @@ namespace SpotifySimpleManager
         private void b_debug_initapi_Click(object sender, EventArgs e)
         {
             dieSteuerung.InitializeAPIAsync();
+        }
+
+        private void _infoIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Show();
         }
     }
 }

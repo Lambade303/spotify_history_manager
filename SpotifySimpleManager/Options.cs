@@ -8,14 +8,16 @@ namespace SpotifySimpleManager
 {
     public class Options
     {
+        public string Commitspeicherort { get; set; }
         public string Username { get; set; }
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
         public string Playlist { get; set; }
         public string Origin { get; set; } //Dateipfad
 
-        public Options(ConfigJson c, string origin)
+        public Options(ConfigJson c, string origin, string commitspeicher)
         {
+            Commitspeicherort = commitspeicher;
             Username = c.Username;
             ClientId = c.ClientId;
             ClientSecret = c.ClientSecret;

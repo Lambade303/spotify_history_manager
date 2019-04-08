@@ -14,24 +14,17 @@ namespace SpotifySimpleManager
     {
         Options _opt;
 
+        bool isReadOnly;
+
         public OptionsUI()
         {
             InitializeComponent();
         }
 
-        private void b_configfile_change_Click(object sender, EventArgs e)
-        {
-            changeConfigFile();
-        }
-
-        private void b_save_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-            Close();
-        }
-
         public new DialogResult ShowDialog()
         {
+            setReadOnlyProperties(true);
+
             DialogResult = DialogResult.Cancel;
             return base.ShowDialog();
         }
@@ -55,14 +48,15 @@ namespace SpotifySimpleManager
 
         private void changeConfigFile()
         {
-            DialogResult d = fileDialog.ShowDialog();
+            DialogResult d = fileDialog_confjson.ShowDialog();
             if (d == DialogResult.OK)
             {
                 try
                 {
-                    string filepath = fileDialog.FileName;
+                    string filepath = fileDialog_confjson.FileName;
+                    string commitspeicher = tB_speicherort.Text;
                     ConfigJson attempt = ConfigJson.DeserializeFile(filepath);
-                    Options o = new Options(attempt, filepath);
+                    Options o = new Options(attempt, filepath, commitspeicher);
                     LoadOptions(o);
                     b_save.Enabled = true;
                 }
@@ -75,13 +69,78 @@ namespace SpotifySimpleManager
             }
         }
 
+        private void changeCommitDir()
+        {
+            DialogResult d = fileDialog_commitspeicher.ShowDialog();
+            if (d == DialogResult.OK)
+            {
+                string filepath = tB_configfile.Text;
+                string commitspeicher = fileDialog_commitspeicher.InitialDirectory;
+                bool dirIsValid = System.IO.Directory.Exists(commitspeicher);
+
+                if (dirIsValid)
+                {
+                    ConfigJson attempt = ConfigJson.DeserializeFile(filepath);
+                    Options o = new Options(attempt, filepath, commitspeicher);
+                    LoadOptions(o);
+                    b_save.Enabled = true;
+                }
+                else
+                {
+                    MessageBox.Show("Fehlerhaftes Verzeichnis ausgewählt.");
+                }
+            }
+        }
+
         private void reloadOptionsData()
         {
+            tB_speicherort.Text = _opt.Commitspeicherort;
             tB_confjson_clientid.Text = _opt.ClientId;
             tB_confjson_clientsecret.Text = _opt.ClientSecret;
             tB_confjson_playlistid.Text = _opt.Playlist;
             tB_confjson_username.Text = _opt.Username;
             tB_configfile.Text = _opt.Origin;
+        }
+
+        private void setReadOnlyProperties(bool readOnly)
+        {
+            isReadOnly = readOnly;
+
+            tB_speicherort.ReadOnly = readOnly;
+            tB_configfile.ReadOnly = readOnly;
+            tB_confjson_clientid.ReadOnly = readOnly;
+            tB_confjson_clientsecret.ReadOnly = readOnly;
+            tB_confjson_playlistid.ReadOnly = readOnly;
+            tB_confjson_username.ReadOnly = readOnly;
+
+            b_commitspeicher_change.Enabled = !readOnly;
+            b_configfile_change.Enabled = !readOnly;
+        }
+
+        private void b_configfile_change_Click(object sender, EventArgs e)
+        {
+            changeConfigFile();
+        }
+
+        private void b_save_Click(object sender, EventArgs e)
+        {
+            if (!isReadOnly)
+            {
+                //Wenn etwas verändert sein könnte
+            }
+
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void b_unlock_Click(object sender, EventArgs e)
+        {
+            setReadOnlyProperties(false);
+        }
+
+        private void b_commitspeicher_change_Click(object sender, EventArgs e)
+        {
+            changeCommitDir();
         }
     }
 }
