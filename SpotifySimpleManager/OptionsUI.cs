@@ -15,10 +15,12 @@ namespace SpotifySimpleManager
         Options _opt;
 
         bool isReadOnly;
+        bool textChanged;
 
         public OptionsUI()
         {
             InitializeComponent();
+            textChanged = false;
         }
 
         public new DialogResult ShowDialog()
@@ -75,7 +77,7 @@ namespace SpotifySimpleManager
             if (d == DialogResult.OK)
             {
                 string filepath = tB_configfile.Text;
-                string commitspeicher = fileDialog_commitspeicher.InitialDirectory;
+                string commitspeicher = fileDialog_commitspeicher.SelectedPath;
                 bool dirIsValid = System.IO.Directory.Exists(commitspeicher);
 
                 if (dirIsValid)
@@ -115,32 +117,49 @@ namespace SpotifySimpleManager
 
             b_commitspeicher_change.Enabled = !readOnly;
             b_configfile_change.Enabled = !readOnly;
+
+            textChanged = readOnly ? textChanged : false;
         }
+
+
 
         private void b_configfile_change_Click(object sender, EventArgs e)
         {
             changeConfigFile();
         }
 
+
         private void b_save_Click(object sender, EventArgs e)
         {
             if (!isReadOnly)
             {
-                //Wenn etwas verändert sein könnte
+                if (textChanged)
+                {
+                    DialogResult = DialogResult.Yes;
+                }
+                else
+                {
+                    DialogResult = DialogResult.No;
+                }
             }
 
-            DialogResult = DialogResult.OK;
             Close();
         }
 
         private void b_unlock_Click(object sender, EventArgs e)
         {
             setReadOnlyProperties(false);
+            b_unlock.Enabled = false;
         }
 
         private void b_commitspeicher_change_Click(object sender, EventArgs e)
         {
             changeCommitDir();
+        }
+
+        private void lbl_TextChanged(object sender, EventArgs e)
+        {
+            textChanged = true;
         }
     }
 }

@@ -16,24 +16,36 @@ namespace SpotifySimpleManager
     {
         Diff = 0,
         Load = 1,
-        Lock = 2
+        Lock = 2,
+        BrokenDiff = 3,
+        Hidden = 4,
     }
 
     public partial class GUI : Form
     {
         private Steuerung dieSteuerung;
         private ReminderUI derReminder;
+
         private GUIMode derModus;
+
         private bool api_init;
+        private bool shadowMode;
         private int diff_add_songs;
         private int diff_rem_songs;
 
-        public GUI()
+        public GUI(bool shadowMode)
         {
             InitializeComponent();
+
             dieSteuerung = new Steuerung(this);
             derReminder = new ReminderUI(this);
+
+            this.shadowMode = shadowMode;
+
+            initShadowMode();
         }
+
+
 
         public void ShowToast(string Message)
         {
@@ -61,23 +73,48 @@ namespace SpotifySimpleManager
             {
                 case GUIMode.Diff:
                     {
+                        if (!shadowMode)
+                            setHiddenStatus(false);
                         group_playlist.Text = "Playlist-Info";
                         fs = FontStyle.Regular;
-                        if (derModus == GUIMode.Lock) setGUILock(false);
+                        if (derModus == GUIMode.Lock)
+                        {
+                            setGUILock(false);
+                            setGUIMenuLock(false);
+                        }
                     }
                     break;
                 case GUIMode.Load:
                     {
+                        setHiddenStatus(false);
                         group_playlist.Text = "(LOAD) Playlist-Info";
                         fs = FontStyle.Italic;
-                        if (derModus == GUIMode.Lock) setGUILock(false);
+                        if (derModus == GUIMode.Lock)
+                        {
+                            setGUILock(false);
+                            setGUIMenuLock(false);
+                        }
                     }
                     break;
                 case GUIMode.Lock:
                     {
                         //Alles sperren
                         setGUILock(true);
+                        setGUIMenuLock(true);
                         fs = FontStyle.Strikeout;
+                    }
+                    break;
+                case GUIMode.BrokenDiff:
+                    {
+                        setGUILock(true);
+                        setGUIMenuLock(false);
+                        fs = FontStyle.Strikeout;
+                    }
+                    break;
+                case GUIMode.Hidden:
+                    {
+                        setHiddenStatus(true);
+                        fs = FontStyle.Regular;
                     }
                     break;
                 default:
@@ -206,16 +243,48 @@ namespace SpotifySimpleManager
             pB_api_loading.Visible = show;
         }
 
+        private async void initShadowMode()
+        {
+            if (shadowMode)
+            {
+                await dieSteuerung.InitializeAPIAsync();
+                ChangeMode(GUIMode.Hidden);
+                dieSteuerung.StartPlaylistListener();
+            }
+        }
+
         private void setGUILock(bool locked)
         {
-            menu_main.Enabled = !locked;
             lV_tracks.Enabled = !locked;
             group_playlist.Enabled = !locked;
         }
 
-        private void GUI_Load(object sender, EventArgs e)
+        private void setGUIMenuLock(bool locked)
         {
-            dieSteuerung.InitializeAPIAsync();
+            menu_main.Enabled = !locked;
+            menu_extras.Enabled = true; //Extras immer an
+        }
+
+        private void setHiddenStatus(bool newValue)
+        {
+            if (newValue)
+            {
+                shadowMode = true;
+                Hide();
+                _infoIcon.Visible = true;
+            }
+            else
+            {
+                shadowMode = false;
+                Show();
+                _infoIcon.Visible = false;
+            }
+        }
+
+        private async void GUI_Load(object sender, EventArgs e)
+        {
+            if (!api_init)
+                await dieSteuerung.InitializeAPIAsync();
         }
 
         private void b_debugdump_Click(object sender, EventArgs e)
@@ -284,14 +353,21 @@ namespace SpotifySimpleManager
             dieSteuerung.ShowOptionsDialog();
         }
 
-        private void b_debug_initapi_Click(object sender, EventArgs e)
+        private async void b_debug_initapi_Click(object sender, EventArgs e)
         {
-            dieSteuerung.InitializeAPIAsync();
+            await dieSteuerung.InitializeAPIAsync();
         }
 
         private void _infoIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            Show();
+            shadowMode = false;
+            ChangeMode(GUIMode.Diff);
+        }
+
+        private void GUI_SizeChanged(object sender, EventArgs e)
+        {
+            //Minimized
+            setHiddenStatus(true);
         }
     }
 }

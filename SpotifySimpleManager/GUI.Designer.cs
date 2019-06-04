@@ -38,7 +38,7 @@
             this.menu_main = new System.Windows.Forms.MenuStrip();
             this.menu_commit = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_commit_save = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.menu_commit_separator = new System.Windows.Forms.ToolStripSeparator();
             this.menu_commit_load = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_playlist = new System.Windows.Forms.ToolStripMenuItem();
             this.menu_playlist_laden = new System.Windows.Forms.ToolStripMenuItem();
@@ -128,7 +128,7 @@
             // 
             this.menu_commit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menu_commit_save,
-            this.toolStripSeparator1,
+            this.menu_commit_separator,
             this.menu_commit_load});
             this.menu_commit.Name = "menu_commit";
             this.menu_commit.Size = new System.Drawing.Size(63, 20);
@@ -142,10 +142,10 @@
             this.menu_commit_save.Text = "Commit abspeichern";
             this.menu_commit_save.Click += new System.EventHandler(this.menu_commit_save_Click);
             // 
-            // toolStripSeparator1
+            // menu_commit_separator
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(221, 6);
+            this.menu_commit_separator.Name = "menu_commit_separator";
+            this.menu_commit_separator.Size = new System.Drawing.Size(221, 6);
             // 
             // menu_commit_load
             // 
@@ -211,7 +211,7 @@
             // menu_extras_optionen
             // 
             this.menu_extras_optionen.Name = "menu_extras_optionen";
-            this.menu_extras_optionen.Size = new System.Drawing.Size(180, 22);
+            this.menu_extras_optionen.Size = new System.Drawing.Size(124, 22);
             this.menu_extras_optionen.Text = "Optionen";
             this.menu_extras_optionen.Click += new System.EventHandler(this.menu_extras_optionen_Click);
             // 
@@ -323,6 +323,7 @@
             // 
             // _infoIcon
             // 
+            this._infoIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("_infoIcon.Icon")));
             this._infoIcon.Text = "Spotify History Manager";
             this._infoIcon.Visible = true;
             this._infoIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this._infoIcon_MouseDoubleClick);
@@ -346,11 +347,11 @@
             this.MainMenuStrip = this.menu_main;
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(435, 513);
-            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(435, 513);
             this.Name = "GUI";
             this.Text = "Spotify History";
             this.Load += new System.EventHandler(this.GUI_Load);
+            this.SizeChanged += new System.EventHandler(this.GUI_SizeChanged);
             this.menu_main.ResumeLayout(false);
             this.menu_main.PerformLayout();
             this.group_debug.ResumeLayout(false);
@@ -371,7 +372,7 @@
         private System.Windows.Forms.ToolStripMenuItem menu_commit;
         private System.Windows.Forms.ToolStripMenuItem menu_commit_load;
         private System.Windows.Forms.ToolStripMenuItem menu_commit_save;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator menu_commit_separator;
         private System.Windows.Forms.ToolStripMenuItem menu_playlist;
         private System.Windows.Forms.ToolStripMenuItem menu_playlist_laden;
         private System.Windows.Forms.ToolStripMenuItem menu_listener;

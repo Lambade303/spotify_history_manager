@@ -43,17 +43,17 @@ namespace SpotifySimpleManager
             _opt = new Options(json, configFilepath, commitspeicher);
         }
 
-        public async void InitializeAPIAsync() //Nach GUI-Load aufgerufen
+        public async Task InitializeAPIAsync() //Nach GUI-Load aufgerufen
         {
-            //dieGUI.ChangeMode(GUIMode.Lock);
+            dieGUI.ChangeMode(GUIMode.Lock);
 
             //AUTHORIZATION
-            string id = _opt.ClientId;
-            string secret = _opt.ClientSecret;
+             string id = _opt.ClientId;
+             string secret = _opt.ClientSecret;
 
             try
             {
-                CredentialsAuth auth = new CredentialsAuth("a9936dcafc7e4ffbad01ea306fc4b267", "6f103a536bf6432892fc44f9eed19ba2");
+                CredentialsAuth auth = new CredentialsAuth(id, secret);
                 Token t = await auth.GetToken();
                 bool fehler = t.HasError();
                 dieGUI.SetInitSuccess(!fehler);
@@ -64,13 +64,16 @@ namespace SpotifySimpleManager
                     TokenType = t.TokenType,
                 };
 
+                GUIMode g = fehler ? GUIMode.Lock : GUIMode.Diff;
+                dieGUI.ChangeMode(g);
+
                 //Lambade303 laden:
                 await RefreshPlaylistDataAsync();
             }
             catch //Keine Verbindung
             {
                 dieGUI.ShowMessage("Error bei der Verbindung zum Spotify-Server.");
-                //Neue GUI-Mode: BrokenDiff (Wenn die Playlist aufgrund Internetprobleme nicht geladen werden kann und trotzdem neu versucht werden soll)
+                dieGUI.ChangeMode(GUIMode.BrokenDiff);
             }
         }
 
@@ -299,7 +302,7 @@ namespace SpotifySimpleManager
         {
             dieOptions.LoadOptions(_opt);
             System.Windows.Forms.DialogResult d = dieOptions.ShowDialog();
-            if (d == System.Windows.Forms.DialogResult.OK)
+            if (d == System.Windows.Forms.DialogResult.Yes) // Yes bei Change - No bei KeinChange
             {
                 _opt = dieOptions.GetOptionsData();
             }

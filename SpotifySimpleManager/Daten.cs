@@ -43,7 +43,6 @@ namespace SpotifySimpleManager
         {
             //Überprüfen ob das auch ein CommitFile ist
             //todo
-            //
 
             string[] lines;
 

@@ -12,11 +12,17 @@ namespace SpotifySimpleManager
         /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
+            bool shadowMode = false;
+            if (args.Length != 0 && args[0] == "-s")
+            {
+                shadowMode = true;
+            }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GUI());
+            Application.Run(new GUI(shadowMode));
         }
     }
 }

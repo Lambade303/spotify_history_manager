@@ -46,7 +46,7 @@
             this.tB_speicherort = new System.Windows.Forms.TextBox();
             this.b_unlock = new System.Windows.Forms.Button();
             this.b_commitspeicher_change = new System.Windows.Forms.Button();
-            this.fileDialog_commitspeicher = new System.Windows.Forms.OpenFileDialog();
+            this.fileDialog_commitspeicher = new System.Windows.Forms.FolderBrowserDialog();
             this.group_confjson.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,6 +74,7 @@
             this.tB_confjson_clientid.ReadOnly = true;
             this.tB_confjson_clientid.Size = new System.Drawing.Size(239, 20);
             this.tB_confjson_clientid.TabIndex = 7;
+            this.tB_confjson_clientid.TextChanged += new System.EventHandler(this.lbl_TextChanged);
             // 
             // tB_confjson_clientsecret
             // 
@@ -82,6 +83,7 @@
             this.tB_confjson_clientsecret.ReadOnly = true;
             this.tB_confjson_clientsecret.Size = new System.Drawing.Size(239, 20);
             this.tB_confjson_clientsecret.TabIndex = 6;
+            this.tB_confjson_clientsecret.TextChanged += new System.EventHandler(this.lbl_TextChanged);
             // 
             // tB_confjson_playlistid
             // 
@@ -90,6 +92,7 @@
             this.tB_confjson_playlistid.ReadOnly = true;
             this.tB_confjson_playlistid.Size = new System.Drawing.Size(239, 20);
             this.tB_confjson_playlistid.TabIndex = 5;
+            this.tB_confjson_playlistid.TextChanged += new System.EventHandler(this.lbl_TextChanged);
             // 
             // tB_confjson_username
             // 
@@ -98,6 +101,7 @@
             this.tB_confjson_username.ReadOnly = true;
             this.tB_confjson_username.Size = new System.Drawing.Size(239, 20);
             this.tB_confjson_username.TabIndex = 4;
+            this.tB_confjson_username.TextChanged += new System.EventHandler(this.lbl_TextChanged);
             // 
             // lbl_confjson_playlistid
             // 
@@ -151,6 +155,7 @@
             this.tB_configfile.ReadOnly = true;
             this.tB_configfile.Size = new System.Drawing.Size(213, 20);
             this.tB_configfile.TabIndex = 2;
+            this.tB_configfile.TextChanged += new System.EventHandler(this.lbl_TextChanged);
             // 
             // b_configfile_change
             // 
@@ -194,6 +199,7 @@
             this.tB_speicherort.ReadOnly = true;
             this.tB_speicherort.Size = new System.Drawing.Size(213, 20);
             this.tB_speicherort.TabIndex = 8;
+            this.tB_speicherort.TextChanged += new System.EventHandler(this.lbl_TextChanged);
             // 
             // b_unlock
             // 
@@ -215,10 +221,6 @@
             this.b_commitspeicher_change.Text = ". . .";
             this.b_commitspeicher_change.UseVisualStyleBackColor = true;
             this.b_commitspeicher_change.Click += new System.EventHandler(this.b_commitspeicher_change_Click);
-            // 
-            // fileDialog_commitspeicher
-            // 
-            this.fileDialog_commitspeicher.InitialDirectory = ".";
             // 
             // OptionsUI
             // 
@@ -267,6 +269,6 @@
         private System.Windows.Forms.TextBox tB_speicherort;
         private System.Windows.Forms.Button b_unlock;
         private System.Windows.Forms.Button b_commitspeicher_change;
-        private System.Windows.Forms.OpenFileDialog fileDialog_commitspeicher;
+        private System.Windows.Forms.FolderBrowserDialog fileDialog_commitspeicher;
     }
 }
