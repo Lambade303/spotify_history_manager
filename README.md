@@ -5,6 +5,10 @@ The application has a Listener that periodically checks for changes and creates 
 
 Options-Tab is not working lmao.
 
+You require a Spotify-Api ID and Secret, that you may get here: https://developer.spotify.com/dashboard
+Just paste it into the id and secret fields of the conf.json.
+
+Additionally you will require the Spotify-Internal URI of your Playlist of choice (without the spotify:playlist:) and paste it into the playlist-field of the conf.json.
 
 Used Libraries:
 
