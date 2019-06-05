@@ -41,11 +41,8 @@ namespace SpotifySimpleManager
             derReminder = new ReminderUI(this);
 
             this.shadowMode = shadowMode;
-
             initShadowMode();
         }
-
-
 
         public void ShowToast(string Message)
         {
@@ -73,8 +70,6 @@ namespace SpotifySimpleManager
             {
                 case GUIMode.Diff:
                     {
-                        if (!shadowMode)
-                            setHiddenStatus(false);
                         group_playlist.Text = "Playlist-Info";
                         fs = FontStyle.Regular;
                         if (derModus == GUIMode.Lock)
@@ -86,7 +81,6 @@ namespace SpotifySimpleManager
                     break;
                 case GUIMode.Load:
                     {
-                        setHiddenStatus(false);
                         group_playlist.Text = "(LOAD) Playlist-Info";
                         fs = FontStyle.Italic;
                         if (derModus == GUIMode.Lock)
@@ -201,7 +195,7 @@ namespace SpotifySimpleManager
 
         public void ReminderUI_Clicked()
         {
-            //GUI Anzeigen, Commit ausführen? vllt mit ReminderUI.Status-Enum Art der Nachricht im ReminderUI übergeben?
+            setHiddenStatus(false);
         }
 
         public void UpdateDiffindicator()
@@ -269,13 +263,11 @@ namespace SpotifySimpleManager
         {
             if (newValue)
             {
-                shadowMode = true;
                 Hide();
                 _infoIcon.Visible = true;
             }
             else
             {
-                shadowMode = false;
                 Show();
                 _infoIcon.Visible = false;
             }
@@ -360,8 +352,7 @@ namespace SpotifySimpleManager
 
         private void _infoIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            shadowMode = false;
-            ChangeMode(GUIMode.Diff);
+            setHiddenStatus(false);
         }
 
         private void GUI_SizeChanged(object sender, EventArgs e)

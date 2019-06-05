@@ -48,8 +48,8 @@ namespace SpotifySimpleManager
             dieGUI.ChangeMode(GUIMode.Lock);
 
             //AUTHORIZATION
-             string id = _opt.ClientId;
-             string secret = _opt.ClientSecret;
+            string id = _opt.ClientId;
+            string secret = _opt.ClientSecret;
 
             try
             {
@@ -67,8 +67,21 @@ namespace SpotifySimpleManager
                 GUIMode g = fehler ? GUIMode.Lock : GUIMode.Diff;
                 dieGUI.ChangeMode(g);
 
-                //Lambade303 laden:
-                await RefreshPlaylistDataAsync();
+                //Playlist laden: (5x retries)
+                int retries = 0;
+                bool exit = false;
+                do
+                {
+                    try
+                    {
+                        await RefreshPlaylistDataAsync();
+                        exit = true;
+                    }
+                    catch
+                    {
+                        retries++;
+                    }
+                } while (retries < 5 && !exit);
             }
             catch //Keine Verbindung
             {
@@ -79,33 +92,17 @@ namespace SpotifySimpleManager
 
         public async Task RefreshPlaylistDataAsync()
         {
-            bool fehler;
             string userid = _opt.Username;
             string playlistid = _opt.Playlist;
             dieGUI.ShowLoadingIcon(true);
 
-            try
-            {
-                l303 = api.GetPlaylist(userid, playlistid);//Codeb.: 6YiI6sO5TyAtHDYanlKIjM; Lambade: 0Yk8TlHuFCGELX2EZHTRZ4
-                l303_tracks = await getTracksAsync();
-                fehler = false;
-                dieGUI.ShowLoadingIcon(false);
-            }
-            catch //Bei Fehler
-            {
-                dieGUI.ShowMessage("Zuviele Requests. Bitte in ein paar Sekunden erneut versuchen!");
-                fehler = true;
-                dieGUI.ShowLoadingIcon(false);
-            }
+            l303 = api.GetPlaylist(userid, playlistid);//Codeb.: 6YiI6sO5TyAtHDYanlKIjM; Lambade: 0Yk8TlHuFCGELX2EZHTRZ4
+            l303_tracks = await getTracksAsync();
+            dieGUI.ShowLoadingIcon(false);
 
             dieGUI.ChangeMode(GUIMode.Diff);
-
-            if (fehler == false)
-            {
-                dieGUI.SetPlaylistInfo(l303.Name, l303.Owner.DisplayName, l303.Tracks.Total, DateTime.Now);
-
-                isPlaylistOnGUI = false;
-            }
+            dieGUI.SetPlaylistInfo(l303.Name, l303.Owner.DisplayName, l303.Tracks.Total, DateTime.Now);
+            isPlaylistOnGUI = false;
         }
 
         public void StartPlaylistListener()
@@ -311,7 +308,22 @@ namespace SpotifySimpleManager
         private async void DerListener_OnFullHour(object sender, EventArgs e)
         {
             //Hier wird der Toast aufgerufen, falls ein Commit nötig ist.
-            await RefreshPlaylistDataAsync();
+            int retries = 0;
+            bool exit = false;
+            do
+            {
+                try
+                {
+                    await RefreshPlaylistDataAsync();
+                    exit = true;
+                }
+                catch
+                {
+                    retries++;
+                }
+            } while (retries < 5 && !exit);
+
+
             int playlistIstGleich = await PerformCompare(); //Returned ob die Playlist gleich ist, daher invert
 
 
